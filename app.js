@@ -50,8 +50,13 @@ app.get('/', (req, res) => {
     res.send({"message": "hello world"});
 });
 
+
 var route = require('./routes');
-app.use('/', route); 
+console.log('====>>',route)
+app.use('/', route);  
+/* var route = require('./routes');
+console.log('path==>>', route);
+app.use('/', route);  */
 
 
 const port = process.env.PORT;
