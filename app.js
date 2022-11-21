@@ -50,9 +50,14 @@ app.get('/', (req, res) => {
     res.send({"message": "hello world"});
 });
 
-
 var route = require('./routes');
-console.log('====>>',route)
+
+fs.ReadFileSync(route)
+
+console.log('====>>',fs.ReadFileSync(route))
+app.use(express.static('public'));
+app.use(express.static('views'));
+
 app.use('/', route);  
 /* var route = require('./routes');
 console.log('path==>>', route);

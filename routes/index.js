@@ -3,29 +3,18 @@ var router = express.Router();
 var AuthController    =  require('./auth/authController');  
 const fs = require("fs");  
 const path = require('path');
-
-console.log('==>>router running==>>');
-//router.get('/', function(req, res) { 
-    console.log("==path==>>",path.join('/', req.params));
-//});
-
-/* router.get('/', function(req, res) { 
-     res.sendFile(path.join(__dirname + '/')); 
-     console.log("check route==>>",data);
-        //__dirname : It will resolve to your project folder. 
-    }); */
+var app = express();
+let route = fs.readdirSync(__dirname);
+route.forEach((file) => {
+    if(file === 'index.js') return;
+    //app.use('/', file)
+    app.use(path.join('/' + file)); 
+});
 
 
 
-fs.readFile(path,function(err, data)
-    {
-        console.log("check route==>>",data);
-        res.end(data);
-    })
 
 
-    const url = req.url; 
-    console.log('=====>>>url==>', url);
 
 router.get('/home', AuthController.dashboard);  
 
