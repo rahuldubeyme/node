@@ -8,8 +8,27 @@ class authController{
         
     };  
 
+    async loginPage(req , res){
+        try{
+            console.log('1112222=> login route'); 
 
-    async login(req , res){
+            console.log('===>>render', res.render('login'))
+        }catch(err){
+
+        }    
+    }
+
+    async login(req, res) {  
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }   
+    }; 
+
+
+    async profilePage(req , res){
         console.log('=> login route');  
         try{
 
@@ -17,6 +36,53 @@ class authController{
 
         }    
     }
+
+    async profile(req, res) {  
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }   
+    }; 
+
+    async changePasswordPage(req , res){
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }    
+    }
+
+    async changePassword(req, res) {  
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }   
+    }; 
+
+
+
+    async settingPage(req , res){
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }    
+    }
+
+    async setting(req, res) {  
+        console.log('=> login route');  
+        try{
+
+        }catch(err){
+
+        }   
+    }; 
 
     async logout(req, res) {  
         console.log('=> login route');  
@@ -30,4 +96,4 @@ class authController{
 
 }
 
-module.exports = authController ;
+module.exports = new authController() ;

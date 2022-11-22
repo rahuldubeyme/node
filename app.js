@@ -3,7 +3,7 @@ var app = express();
 const moment = require('moment');
 var http = require('http');
 var connect = require('connect');
-
+const fs = require("fs");  
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -46,22 +46,12 @@ app.use(express.urlencoded({limit: '100mb',extended: true }));
   
 
 
-app.get('/', (req, res) => {
-    res.send({"message": "hello world"});
-});
+app.set('views', path.join(__dirname, 'views'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-var route = require('./routes');
 
-fs.ReadFileSync(route)
+app.use('/', require('./routes'));
 
-console.log('====>>',fs.ReadFileSync(route))
-app.use(express.static('public'));
-app.use(express.static('views'));
-
-app.use('/', route);  
-/* var route = require('./routes');
-console.log('path==>>', route);
-app.use('/', route);  */
 
 
 const port = process.env.PORT;
@@ -74,3 +64,4 @@ var server = app.listen(1000, function () {
 process.on('uncaughtException', function (err) { 
     console.log('Caught exception: ' + err);
 });
+module.exports = app;
