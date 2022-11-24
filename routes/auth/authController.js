@@ -3,16 +3,22 @@ const { Users } = require('../../models');
 class authController{
 
     async dashboard(req, res) {  
+        try{  
+            console.log('11111'); 
 
-        res.render('admin/dashboard');   
-        
+            console.log('2222222222')
+            res.render('index')
+        }catch(err){
+
+        } 
     };  
 
     async loginPage(req , res){
-        try{
-            console.log('1112222=> login route'); 
+        try{  
+            console.log('1333333'); 
 
-            console.log('===>>render', res.render('login'))
+            console.log('44444444')
+           return res.render('users/list')
         }catch(err){
 
         }    
