@@ -6,7 +6,7 @@ class authController{
         try{  
             console.log('11111'); 
 
-            console.log('2222222222')
+            console.log('2222222222',render('index'))
             res.render('index')
         }catch(err){
 
@@ -14,20 +14,20 @@ class authController{
     };  
 
     async loginPage(req , res){
-        try{  
-            console.log('1333333'); 
-
-            console.log('44444444')
-           return res.render('users/list')
+        console.log('=> login route');  
+        try{
+            
+           return res.render('login')
         }catch(err){
 
-        }    
+        }   
     }
 
     async login(req, res) {  
         console.log('=> login route');  
         try{
-
+            
+           return res.render('login')
         }catch(err){
 
         }   
@@ -37,7 +37,8 @@ class authController{
     async profilePage(req , res){
         console.log('=> login route');  
         try{
-
+            
+           return res.render('profile')
         }catch(err){
 
         }    
@@ -55,7 +56,7 @@ class authController{
     async changePasswordPage(req , res){
         console.log('=> login route');  
         try{
-
+            return res.render('changepassword')
         }catch(err){
 
         }    
@@ -75,10 +76,11 @@ class authController{
     async settingPage(req , res){
         console.log('=> login route');  
         try{
-
+            
+           return res.render('settings')
         }catch(err){
 
-        }    
+        }      
     }
 
     async setting(req, res) {  

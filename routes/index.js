@@ -14,14 +14,14 @@ route.forEach((file) => {
 });
 
 
-router.get('/', AuthController.dashboard); 
-router.get('/login', AuthController.login); 
+router.get('/home', AuthController.dashboard); 
+router.get('/login', AuthController.loginPage); 
 router.get('/profile', AuthController.profilePage); 
 router.post('/profle', AuthController.profile); 
 router.get('/changepassword', AuthController.changePasswordPage); 
 router.post('/changepassword', AuthController.changePassword); 
-router.get('/setting', AuthController.settingPage); 
-router.post('/setting', AuthController.setting); 
+router.get('/settings', AuthController.settingPage); 
+router.post('/settings', AuthController.setting); 
 router.get('/logout', AuthController.logout); 
 
 

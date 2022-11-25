@@ -1,26 +1,107 @@
 
 <html lang="en">
     <meta charset="UTF-8" />
-
-    
-<head>
+<body>
   <%- include('./layout/header'); %>
-</head>
-<body class="container">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="/">brand</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 " > 
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/login">login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/settings">settings</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/profile">profile</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/changepassword">changepassword</a>
+        </li>
 
-<header>
-</header>
-
-<main>
-  <div class="jumbotron">
-    <h1>This is great</h1>
-    <p>Welcome to templating using EJS</p>
+      </ul>
+      
+    </div>
   </div>
-</main>
+</nav>
+ 
 
-<footer>
-    <%- include('./layout/footer'); %>
-</footer>
+
+
+
+
+
+
+<div class="row">
+  <div class="container mt-5">
+    <div class="d-flex">
+      <div class="col-3 shadow p-3 mb-5 bg-white rounded">
+        <div class="card">
+          <div class="card-body">
+            total earnings
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3 mx-3 shadow p-3 mb-5 bg-white rounded">
+        <div class="card ">
+          <div class="card-body ">
+            active user
+          </div>
+        </div>
+      </div>
+
+      <div class="col-3 shadow p-3 mb-5 bg-white rounded">
+        <div class="card">
+          <div class="card-body">
+            total users
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="fixed-bottom">
+  <footer class="">   
+      <p class="text-center text-muted">© 2021 Company, Inc</p>
+    </footer>
+</div>
+  <%- include('./layout/footer'); %>
+
 
 </body>
 </html>
