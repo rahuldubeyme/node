@@ -1,5 +1,5 @@
 const { Users } = require('../../models');   
-
+const request = require('request');
 console.log('model==>>', Users);
 
 class authController{
@@ -27,9 +27,35 @@ class authController{
         let { email , password} = req.body;  
         try{
             console.log('=> 11login', req.body); 
-           
 
-           return res.render('dashboard')
+            let userData = await Users.findOne({email: email}).exec(function(error, user) {
+            if (error) {
+                callback({error: true})
+            } else if (!user) {
+                //callback({error: true})
+                res.warn('enterd password is wrong!')
+                return res.render('login')
+            } else {
+                user.comparePassword(password, function(matchError, isMatch) {
+                if (matchError) {
+                    console.log('=matchError==>>',matchError);
+                    res.warn('enterd password is wrong!')
+                    return res.render('login')
+                    //callback({error: true}),
+                } else if (!isMatch) {
+                    console.log('=matchError==>>',isMatch);
+                    //callback({error: true})
+                } else {
+                    
+                    //callback({success: true})
+                    return res.render('dashboard')
+                }
+                })
+            }
+            })
+            /* let session=req.session;
+            session.user=userData;
+            console.log("===>>session ==>>",userData) */
         }catch(err){
 
         }   

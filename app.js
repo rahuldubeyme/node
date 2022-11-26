@@ -4,6 +4,8 @@ const moment = require('moment');
 var http = require('http');
 var connect = require('connect');
 const fs = require("fs"); 
+const request = require('request');
+
 var path = require('path'); 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -13,7 +15,6 @@ app.use(cors());
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 app.use(cookieParser()); 
-app.use(expressSession({secret: 'D%$*&^lk32', resave: false,saveUninitialized: true}));  
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 app.use(express.static(__dirname +'/public'));  
@@ -22,8 +23,17 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, 'public')));
 
 const connectPool = require('./config/db.js'); 
-
-
+const oneDay = 1000 * 60 * 60 * 24;
+app.use(expressSession({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized:true,
+    cookie: { maxAge: oneDay },
+    resave: false 
+}));
+app.use(cookieParser());
+// parsing the incoming data
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.use('/', require('./routes'));
 app.set('view engine', 'ejs')

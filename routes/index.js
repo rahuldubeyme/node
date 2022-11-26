@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router(); 
 let AuthController =  require('./auth/authController'); 
 const fs = require("fs");  
+
 const path = require('path');
 var app = express();
 
@@ -9,7 +10,6 @@ let route = fs.readdirSync(__dirname);
 
 route.forEach((file) => {
     if(file === 'index.js') return;
-    console.log("2222 path==>",file);
     app.use(`/${file}`, require(`./${file}`))
 });
 
