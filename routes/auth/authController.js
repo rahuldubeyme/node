@@ -1,20 +1,20 @@
 const { Users } = require('../../models');   
 
+console.log('model==>>', Users);
+
 class authController{
 
     async dashboard(req, res) {  
         try{  
             console.log('11111'); 
-
-            console.log('2222222222',render('index'))
-            res.render('index')
+            res.render('dashboard')
         }catch(err){
 
         } 
     };  
 
     async loginPage(req , res){
-        console.log('=> login route');  
+        console.log('=> login page');  
         try{
             
            return res.render('login')
@@ -23,11 +23,13 @@ class authController{
         }   
     }
 
-    async login(req, res) {  
-        console.log('=> login route');  
+    async login(req, res) { 
+        let { email , password} = req.body;  
         try{
-            
-           return res.render('login')
+            console.log('=> 11login', req.body); 
+           
+
+           return res.render('dashboard')
         }catch(err){
 
         }   
@@ -35,7 +37,7 @@ class authController{
 
 
     async profilePage(req , res){
-        console.log('=> login route');  
+        console.log('=> profile route');  
         try{
             
            return res.render('profile')
@@ -45,7 +47,7 @@ class authController{
     }
 
     async profile(req, res) {  
-        console.log('=> login route');  
+        console.log('=> profile route');  
         try{
 
         }catch(err){

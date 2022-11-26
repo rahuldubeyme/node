@@ -1,11 +1,11 @@
 const mongoose = require('mongoose');
 
 const UserSchema = mongoose.Schema({
-    first_name : {
+    firstname : {
         type : String,
         default : ''
     },
-    last_name : {
+    lastname : {
         type : String,
         default : ''
     },
@@ -17,36 +17,36 @@ const UserSchema = mongoose.Schema({
         type : String,
         default : ''
     },
-    profile_pic : {
+    profilepic : {
         type : String,
         default : ''
     },
-    mobile_numbre : {
+    phone : {
         type : String,
         default : ''
     },
-    contact_number : {
+    countrycode : {
         type : String,
         default : ''
     },
-    role_id  : {
+    roleid  : {
         type : String,
         default : ''
     },
-    is_deleted : {
-        type : String,
+    isDeleted : {
+        type : Boolean,
+        default : false
+    },
+    isActive  : {
+        type : Boolean,
+        default : false
+    },
+    createdAt   : {
+        type : Date,
         default : ''
     },
-    is_active  : {
-        type : String,
-        default : ''
-    },
-    created_at   : {
-        type : String,
-        default : ''
-    },
-    updated_at  : {
-        type : String,
+    updatedAt  : {
+        type : Date,
         default : ''
     },  
 }, {
