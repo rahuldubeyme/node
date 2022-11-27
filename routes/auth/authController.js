@@ -48,7 +48,7 @@ class authController{
                 } else {
                     
                     //callback({success: true})
-                    return res.render('dashboard')
+                    return res.render('index')
                 }
                 })
             }
@@ -121,9 +121,10 @@ class authController{
     }; 
 
     async logout(req, res) {  
-        console.log('=> login route');  
+        console.log('=> logout route');  
         try{
-
+            req.session.destroy();
+            res.redirect('/');
         }catch(err){
 
         }   
