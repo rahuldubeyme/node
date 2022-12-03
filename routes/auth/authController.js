@@ -17,7 +17,7 @@ class authController{
         console.log('=> login page');  
         try{
             
-           return res.render('login')
+           return res.redirect('login')
         }catch(err){
 
         }   

@@ -7,8 +7,9 @@ const fs = require("fs");
 const request = require('request');
 
 var path = require('path'); 
-const dotenv = require('dotenv');
-dotenv.config();
+const dotenv = require('dotenv').config();
+
+console.log('===env==>>',dotenv.parsed.SITEURL);
 const cors = require('cors');
 const bodyParser = require('body-parser'); 
 app.use(cors()); 
@@ -17,10 +18,11 @@ var expressSession = require('express-session');
 app.use(cookieParser()); 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
-app.use(express.static(__dirname +'/public'));  
+//app.use(express.static(__dirname +'/public'));  
 var flash = require('express-flash-messages')
 app.use(flash()) 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use('/public', express.static('public'));
 
 const connectPool = require('./config/db.js'); 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -53,7 +55,13 @@ app.get('/', function (req, res) {
 
 
 
-
+app.use((req,res,next) => {
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+    res.locals.user = 'user';
+    res.locals.SITE_URL = dotenv.parsed.SITEURL;
+    next();
+  });
 
 
 
