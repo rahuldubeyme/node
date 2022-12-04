@@ -15,7 +15,7 @@ route.forEach((file) => {
 
 
 
-router.get('/login', AuthController.loginPage); 
+router.get('/auth-login', AuthController.loginPage); 
 
 router.post('/login', AuthController.login); 
 

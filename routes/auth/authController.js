@@ -1,4 +1,5 @@
-const { Users } = require('../../models');   
+const { Users } = require('../../models'); 
+const jwt = require("jsonwebtoken");  
 const request = require('request');
 console.log('model==>>', Users);
 
@@ -27,12 +28,13 @@ class authController{
         let { email , password} = req.body;  
         try{
             console.log('=> 11login', req.body); 
-
-            let userData = await Users.findOne({email: email}).exec(function(error, user) {
+            let userData = await Users.findOne({email: email})
+            await Users.findOne({email: email}).exec(function(error, user) {
             if (error) {
                 callback({error: true})
             } else if (!user) {
                 //callback({error: true})
+                console.log('==users==>>', user);
                 res.warn('enterd password is wrong!')
                 return res.render('login')
             } else {
@@ -46,7 +48,18 @@ class authController{
                     console.log('=matchError==>>',isMatch);
                     //callback({error: true})
                 } else {
-                    
+                    console.log('===>>>payload ==>>', userData);
+                    jwt.sign(
+                        userData.toJSON(),
+                        "randomString",
+                        {
+                          expiresIn: 3600
+                        },
+                        (err, token) => {
+                          if (err) throw err;
+                          return res.render('index');
+                        }
+                      );
                     //callback({success: true})
                     return res.render('index')
                 }
