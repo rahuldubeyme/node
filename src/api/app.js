@@ -81,7 +81,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err.message);
 });
-const port = process.env.PORT;
+const port = process.env.PORT || 2100;
 console.log(`Your port is ${port}`);
 
 var server = app.listen(port, function () { 
