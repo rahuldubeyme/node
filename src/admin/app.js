@@ -68,8 +68,9 @@ app.use(function(req, res, next) {
 app.use((req,res,next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-    res.locals.user = 'user';
+    res.locals.user = req.session.user;
     res.locals.SITE_URL = dotenv.parsed.SITEURL;
+
     next();
   });
 

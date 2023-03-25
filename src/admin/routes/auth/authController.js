@@ -54,7 +54,6 @@ class authController{
                     console.log('=matchError==>>',isMatch);
                     //callback({error: true})
                 } else {
-                    console.log('===>>>payload ==>>', userData);
                     jwt.sign(
                         userData.toJSON(),
                         "randomString",
