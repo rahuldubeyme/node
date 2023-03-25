@@ -19,7 +19,9 @@ router.get('/auth-login', AuthController.loginPage);
 
 router.post('/login', AuthController.login); 
 
-router.get('/dashboard', AuthController.dashboard); 
+router.get('/', AuthController.dashboard); 
+
+
 
 router.get('/profile', AuthController.profilePage); 
 

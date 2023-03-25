@@ -1,0 +1,20 @@
+<%- include('./header'); %>
+<%- include('./footer'); %>
+
+app.get('/', function(req, res) {
+  res.send('Hello World!');
+  return;
+});
+
+login erro 
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Login</title>
+</head>
+<body>
+  <% if (message) { %>
+    <div><%= message %></div>
+  <% } %>
+  <form method="POST" action="/login">
+    <input type="text" name

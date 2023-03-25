@@ -11,7 +11,9 @@ class authController{
             req.flash('success', 'Your action was successful.');
             const success = req.flash('success');
             const error = req.flash('error');
-            return res.redirect('/dashboard',{error, success})
+            let user = req.session.user;
+            let alert = req.session.alert = 'You have been logged in.';
+            return res.render('index',{error, success, user, alert})
         }catch(err){
 
         } 
@@ -35,6 +37,7 @@ class authController{
             let userData = await Users.findOne({email: email})
             await Users.findOne({email: email}).exec(function(error, user) {
             if (error) {
+                console.log('=> error1', error); 
                 callback({error: true})
             } else if (!user) {
                 //callback({error: true})
@@ -49,10 +52,8 @@ class authController{
                     console.log('=matchError==>>',matchError);
                     res.warn('enterd password is wrong!')
                     return res.render('login')
-                    //callback({error: true}),
                 } else if (!isMatch) {
                     console.log('=matchError==>>',isMatch);
-                    //callback({error: true})
                 } else {
                     jwt.sign(
                         userData.toJSON(),
@@ -62,11 +63,16 @@ class authController{
                         },
                         (err, token) => {
                           if (err) throw err;
+
+                          req.session.user = userData;
+
                           return res.render('index');
                         }
                       );
                     //callback({success: true})
-                    return res.render('index')
+                    req.session.user = userData;
+                    console.log('userData=>>',userData);
+                    return res.redirect('/')
                 }
                 })
             }

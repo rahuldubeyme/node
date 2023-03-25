@@ -40,7 +40,15 @@ app.use('/', require('./routes'));
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views')) 
 app.get('/', function (req, res) {
+  if(!req.session.user){
+    console.log('not getting session user ===',req.session.user)
     res.render('login')
+  }else{
+    console.log('getting session user ===',req.session.user)
+    let user = req.session.user;
+    res.render('index',{user})
+  }
+   
 });
 
  
