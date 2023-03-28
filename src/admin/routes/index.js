@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router(); 
-let AuthController =  require('./auth/authController'); 
+
 const fs = require("fs");  
 
 const path = require('path');
@@ -10,36 +10,9 @@ let route = fs.readdirSync(__dirname);
 
 route.forEach((file) => {
     if(file === 'index.js') return;
+    console.log('file 23==>>',file)
     app.use(`/${file}`, require(`./${file}`))
 });
-
-
-
-router.get('/auth-login', AuthController.loginPage); 
-
-router.post('/login', AuthController.login); 
-
-router.get('/', AuthController.dashboard); 
-
-
-
-router.get('/profile', AuthController.profilePage); 
-
-router.post('/profle', AuthController.profile); 
-
-router.get('/changepassword', AuthController.changePasswordPage); 
-
-router.post('/changepassword', AuthController.changePassword); 
-
-router.get('/settings', AuthController.settingPage); 
-
-router.post('/settings', AuthController.setting); 
-
-router.get('/logout', AuthController.logout); 
-
-
-
-
 
 
 

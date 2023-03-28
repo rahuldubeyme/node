@@ -4,11 +4,11 @@ class usersController{
 
     async list(req, res) {  
 
-        res.render('admin/dashboard');   
+        res.render('users/list');   
         
     };  
 
 
 }
 
-module.exports = usersController ;
+module.exports = new usersController()

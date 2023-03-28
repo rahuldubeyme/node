@@ -1,7 +1,6 @@
 const { Users } = require('../../../../models'); 
 const jwt = require("jsonwebtoken");  
 const request = require('request');
-console.log('model==>>', Users);
 
 class authController{
 

@@ -461,3 +461,13 @@ table.dataTable>tbody>tr.child ul.dtr-details {
         flex-direction: row;
     }
 }
+
+/* ------------------------------------------------ */
+.nav-link:hover {
+    color: red;
+    text-decoration: underline;
+  }
+
+a {
+    color: #444;
+}
