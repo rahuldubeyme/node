@@ -1,28 +1,30 @@
 const express = require('express');
 const router = express.Router(); 
 const AuthController =  require('./authController'); 
+const varifyToken =  require('../../utils/auth'); 
+let token = varifyToken.varifyToken;
 
 
 
-router.get('/', AuthController.dashboard); 
+router.get('/',token, AuthController.dashboard); 
 
-router.get('/auth-login', AuthController.loginPage); 
+router.get('/auth-login', token, AuthController.loginPage); 
 
-router.post('/login', AuthController.login); 
+router.post('/login', token,  AuthController.login); 
 
-router.get('/profile', AuthController.profilePage); 
+router.get('/profile',token,  AuthController.profilePage); 
 
-router.post('/profle', AuthController.profile); 
+router.post('/profle', token, AuthController.profile); 
 
-router.get('/changepassword', AuthController.changePasswordPage); 
+router.get('/changepassword',token,  AuthController.changePasswordPage); 
 
-router.post('/changepassword', AuthController.changePassword); 
+router.post('/changepassword', token, AuthController.changePassword); 
 
-router.get('/settings', AuthController.settingPage); 
+router.get('/settings', token, AuthController.settingPage); 
 
-router.post('/settings', AuthController.setting); 
+router.post('/settings', token, AuthController.setting); 
 
-router.get('/logout', AuthController.logout); 
+router.get('/logout', token, AuthController.logout); 
 
 
 

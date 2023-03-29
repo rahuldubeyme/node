@@ -1,5 +1,9 @@
 var express = require('express');
 var router = express.Router(); 
+const AuthController =  require('./auth/authController'); 
+const varifyToken =  require('../utils/auth'); 
+let token = varifyToken.varifyToken;
+
 
 const fs = require("fs");  
 
@@ -13,6 +17,10 @@ route.forEach((file) => {
     console.log('file 23==>>',file)
     app.use(`/${file}`, require(`./${file}`))
 });
+
+router.get('/auth-login', token, AuthController.loginPage); 
+
+router.post('/login', token,  AuthController.login); 
 
 
 
