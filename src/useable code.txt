@@ -18,3 +18,37 @@ login erro
   <% } %>
   <form method="POST" action="/login">
     <input type="text" name
+
+
+
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    app.get('/', (req, res) => {
+  if (someCondition) {
+    res.send('Response 1');
+    return; // Add this line to prevent further execution
+  }
+  res.send('Response 2');
+});

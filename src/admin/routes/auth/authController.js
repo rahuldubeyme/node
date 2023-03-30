@@ -6,7 +6,7 @@ class authController{
 
     async dashboard(req, res) {  
         try{  
-            console.log('11111'); 
+            console.log('11dashboarddashboarddashboard111'); 
             req.flash('success', 'Your action was successful.');
             const success = req.flash('success');
             const error = req.flash('error');
@@ -19,20 +19,21 @@ class authController{
     };  
 
     async loginPage(req , res){
-        console.log('=> login page');  
+        console.log('=> loginPage111111111');  
         try{
-            
             req.flash('error', 'Your action was successful.');
-           return res.redirect('login')
+           return res.render('login')
         }catch(err){
-
+            console.log('=> 11',err);  
         }   
     }
 
     async login(req, res) { 
-        let { email , password} = req.body;  
+        let { email , password } = req.body; 
+         
         try{
             console.log('=> 11login', req.body); 
+            
             let userData = await Users.findOne({email: email})
             await Users.findOne({email: email}).exec(function(error, user) {
             if (error) {

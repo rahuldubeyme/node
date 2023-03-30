@@ -26,7 +26,7 @@ app.use('/public', express.static('public'));
 const connectPool = require('../../config/db'); 
 const oneDay = 1000 * 60 * 60 * 24;
 app.use(expressSession({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    secret: "thisissessionkey",
     saveUninitialized:true,
     cookie: { maxAge: oneDay },
     resave: false 

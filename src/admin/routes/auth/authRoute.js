@@ -6,11 +6,11 @@ let token = varifyToken.varifyToken;
 
 
 
-router.get('/',token, AuthController.dashboard); 
+router.get('/dashboard',token, AuthController.dashboard); 
 
-router.get('/auth-login', token, AuthController.loginPage); 
+/* router.get('/auth-login', token, AuthController.loginPage); 
 
-router.post('/login', token,  AuthController.login); 
+router.post('/login', token,  AuthController.login);  */
 
 router.get('/profile',token,  AuthController.profilePage); 
 

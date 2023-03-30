@@ -13,15 +13,18 @@ var app = express();
 let route = fs.readdirSync(__dirname);
 
 route.forEach((file) => {
-    if(file === 'index.js') return;
     console.log('file 23==>>',file)
+    if(file === 'index.js') return;
     app.use(`/${file}`, require(`./${file}`))
 });
 
-router.get('/auth-login', token, AuthController.loginPage); 
-
-router.post('/login', token,  AuthController.login); 
+router.get('/', token, AuthController.dashboard); 
 
 
+router.get('/login',  AuthController.loginPage); 
+
+router.post('/login',  AuthController.login); 
+
+router.get('/dashboard', token, AuthController.dashboard); 
 
 module.exports = router;
