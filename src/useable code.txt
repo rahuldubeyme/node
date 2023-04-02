@@ -52,3 +52,93 @@ login erro
   }
   res.send('Response 2');
 });
+
+
+
+
+
+
+
+ let varifyToken = (req, res, next) => {
+        const { user } = req;
+
+
+        const payload = { userId: 123 };
+        const secretKey = 'secret-key';
+        const token = jwt.sign(payload, secretKey);
+        console.log('token==>>',token)
+        /* verify */
+        const authHeader = req.headers['authorization'];
+        const vtoken = authHeader && authHeader.split(' ')[1];
+      
+        // If the token is not provided, return an error response
+        if (!vtoken) {
+          return res.status(401).json({ error: 'JWT token not provided' });
+        }
+      
+        // Verify the token using the secret key
+        jwt.verify(vtoken, 'secret-key', (err, decoded) => {
+          // If the token is not valid, return an error response
+          if (err) {
+            return res.status(403).json({ error: 'JWT token invalid' });
+          }
+          console.log('token decoded==>>',decoded)
+          // If the token is valid, attach the decoded payload to the request object and call the next middleware function
+          req.user = decoded;
+          next();
+        });
+
+        
+        /* jwt auth */
+        /* const authHeader = req.headers['authorization'];
+        const token = authHeader && authHeader.split(' ')[1]; 
+        console.log("header==>>", token)
+        jwt.verify(token, "helloSecrete", (err, decoded) => {
+
+            console.log('jwt err==>', err);
+            console.log('jwt decoded==>', decoded);
+
+            if (err) {
+              res.redirect('auth/login'); 
+              return res.status(401).send({
+                message: "Unauthorized!"
+              });
+            }
+            req.userId = decoded.id;
+            next();
+          }); */
+        /* eof */
+        console.log('req.u2311====', req.session.user)
+        //res.send('Response 1');
+        if(req.session){
+            console.log("111111111111")
+            let LoginUser = req.session.user; 
+            if(LoginUser != undefined){
+                let user = req.session.user;    
+                console.log("222222222222")
+                //next(user); 
+                res.redirect('/dashboard');   
+            }else{
+                console.log("333333333333")
+                res.redirect('/login');       
+            } 
+        }else{
+            res.redirect('/login');       
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

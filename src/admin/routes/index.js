@@ -1,8 +1,9 @@
 var express = require('express');
 var router = express.Router(); 
 const AuthController =  require('./auth/authController'); 
-const varifyToken =  require('../utils/auth'); 
-let token = varifyToken.varifyToken;
+const verifyToken =  require('../utils/auth'); 
+const token = verifyToken.varifyToken;
+
 
 
 const fs = require("fs");  
@@ -18,13 +19,26 @@ route.forEach((file) => {
     app.use(`/${file}`, require(`./${file}`))
 });
 
-router.get('/', token, AuthController.dashboard); 
 
 
-router.get('/login',  AuthController.loginPage); 
+/* all login routes */
+console.log('token==>',token);
 
-router.post('/login',  AuthController.login); 
+router.get('/',token, AuthController.dashboard); 
 
-router.get('/dashboard', token, AuthController.dashboard); 
+router.get('/profile',token,  AuthController.profilePage); 
+
+router.post('/profle', token, AuthController.profile); 
+
+router.get('/changepassword',token,  AuthController.changePasswordPage); 
+
+router.post('/changepassword', token, AuthController.changePassword); 
+
+router.get('/settings', token, AuthController.settingPage); 
+
+router.post('/settings', token, AuthController.setting); 
+
+router.get('/logout', token, AuthController.logout); 
+
 
 module.exports = router;

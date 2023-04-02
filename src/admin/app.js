@@ -54,21 +54,13 @@ app.get('/', function (req, res) {
  
 
 
-
-
-//jwt varify token
 app.use(function(req, res, next) {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'randomString', function(err, decode) {
-        if (err) req.user = undefined;
-        req.user = decode;
-        next();
-      });
-    } else {
-      req.user = undefined;
-      next();
-    }
-  });
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+});
 
 
 
@@ -76,7 +68,7 @@ app.use(function(req, res, next) {
 app.use((req,res,next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
-    res.locals.user = req.session.user;
+    res.locals.user = req.session.user || {};
     res.locals.SITE_URL = dotenv.parsed.SITEURL;
 
     next();
