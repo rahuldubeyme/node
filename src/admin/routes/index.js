@@ -18,19 +18,36 @@ route.forEach((file) => {
     if(file === 'index.js') return file;
 
     console.log('Middleware function running==>>', file);
-    app.use(`/${file}`, require(`./${file}`))
+    app.use(`${file}`, require(`./${file}`))
 });
 
 
-router.get('/auth/auth-login', function(req, res) {
-    res.send('Hello World!');
-    return;
-  });
+router.get('/auth/auth-login', 
+// function(req, res) {
+//     res.send('Hello World!');
+//     //return;
+//   },
+  AuthController.loginPage
+  );
+
+
+router.post('/auth/auth-login', 
+    AuthController.login
+    );
 
 /* all login routes */
 console.log('token==>',token);
 
 router.get('/',token, AuthController.dashboard); 
+
+router.get('/', 
+function(req, res) {
+    res.send('Hello World home!');
+    return;
+  },
+  //AuthController.loginPage
+  );
+
 
 router.get('/profile',token,  AuthController.profilePage); 
 

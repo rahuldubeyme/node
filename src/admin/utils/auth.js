@@ -6,17 +6,8 @@ class varifyClass{
   async varifyToken(req, res, next){
         const { user } = req;
 
-            const authHeader = req.headers['authorization'];
-            const token = authHeader && authHeader.split(' ')[1];
-            console.log('v==>>',token)
-              
-            /* if (!token) {
-              return res.status(403).send({
-                message: "No token provided!"
-              });
-            } */
-        
-            console.log('token==>',token)
+
+        console.log('token sessiion==>',req.session)
           
             jwt.verify(token, "ABCS", (err, decoded) => {
         
@@ -32,8 +23,7 @@ class varifyClass{
                 })
                 console.log('verified user==>>', userData)
                 res.user = userData.Json();
-                //next();
-                return res.redirect('/');  
+                next();
               }
               
             });
