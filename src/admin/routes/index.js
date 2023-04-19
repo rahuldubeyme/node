@@ -16,8 +16,6 @@ let route = fs.readdirSync(__dirname);
 route.forEach((file) => {
     console.log('file 23==>>',file)
     if(file === 'index.js') return file;
-
-    console.log('Middleware function running==>>', file);
     app.use(`${file}`, require(`./${file}`))
 });
 
@@ -34,9 +32,6 @@ router.get('/auth/auth-login',
 router.post('/auth/auth-login', 
     AuthController.login
     );
-
-/* all login routes */
-console.log('token==>',token);
 
 router.get('/',token, AuthController.dashboard); 
 

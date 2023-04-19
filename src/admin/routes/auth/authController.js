@@ -6,12 +6,13 @@ class authController{
 
     async dashboard(req, res) {  
         try{  
-            console.log('11dashboarddashboarddashboard111'); 
+            console.log('==========dash', req.session.user); 
             req.flash('success', 'Your action was successful.');
             const success = req.flash('success');
             const error = req.flash('error');
             let user = req.session.user;
             let alert = req.session.alert = 'You have been logged in.';
+            
             return res.render('index',{error, success, user, alert})
         }catch(err){
 
@@ -28,12 +29,13 @@ class authController{
         }   
     }
 
-    async login(req, res) { 
-        let { email , password } = req.body; 
-         
+    async login(req, res) {          
         try{
+
+        let { email , password } = req.body; 
             console.log('=> 11login', req.body); 
-            
+            //return 0;
+
             let userData = await Users.findOne({email: email})
             await Users.findOne({email: email}).exec(function(error, user) {
             if (error) {
@@ -57,22 +59,26 @@ class authController{
                 } else {
                     jwt.sign(
                         userData.toJSON(),
-                        "randomString",
+                        "secret-key",
                         {
                           expiresIn: 3600
                         },
                         (err, token) => {
                           if (err) throw err;
 
+                          console.log('jwt token after login==>', token)
+
                           req.session.user = userData;
 
-                          return res.render('index');
+                          req.session.token = token;
+
+                          return res.redirect('/');
                         }
                       );
                     //callback({success: true})
-                    req.session.user = userData;
-                    console.log('userData=>>',userData);
-                    return res.redirect('/')
+                    // req.session.user = userData;
+                    // console.log('userData=>>',userData);
+                    // return res.redirect('/')
                 }
                 })
             }

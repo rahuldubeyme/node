@@ -4,29 +4,33 @@ const { Users } = require('../../../models');
 
 class varifyClass{
   async varifyToken(req, res, next){
-        const { user } = req;
+    try{
+      const { user } = req;
+      //console.log('token sessiion _id==>',req.session.user._id)
 
-
-        console.log('token sessiion==>',req.session)
-          
-            jwt.verify(token, "ABCS", (err, decoded) => {
+      console.log('token sessiion _id==>',req.session.token)
         
-            console.log('token==>',decoded, "err=>, err")
+          jwt.verify(req.session.token, "secret-key", (err, decoded) => {
+      
+          console.log('token1==>',decoded, "err=>, err", err)
 
-              if (err || decoded) {
-                return res.redirect('/auth/auth-login');
-              }
+            if (decoded != undefined) {
+              console.log('111111111111')
+              let userData = Users.findOne({
+                iat : decoded.iat
+              })
+              console.log('verified user==>>', decoded._id)
+              res.user = decoded;
+              next();
+              //return res.render('index');
+            }else{
+              return res.redirect('auth/auth-login');
+            }              
+          });
 
-              if (err != null || decoded) {
-                let userData = Users.findOne({
-                  _id : decoded.id
-                })
-                console.log('verified user==>>', userData)
-                res.user = userData.Json();
-                next();
-              }
-              
-            });
+    }catch(erro){
+      console.log('erro==>>', erro)
+    }
     }
 }
 
