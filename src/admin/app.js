@@ -20,8 +20,8 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); 
 //app.use(express.static(__dirname +'/public')); 
 app.use(flash()) 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/public', express.static('public'));
+ app.use(express.static(path.join(__dirname, 'public')));
+ app.use('./public', express.static('public'));
 
 const connectPool = require('../../config/db'); 
 const oneDay = 1000 * 60 * 60 * 24;
@@ -35,6 +35,10 @@ app.use(cookieParser());
 // parsing the incoming data
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// app.use(express.static('public'));
+
+// console.log("public===>>", express.static('public'))
 
 app.use('/', require('./routes'));
 app.set('view engine', 'ejs')

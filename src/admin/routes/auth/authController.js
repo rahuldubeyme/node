@@ -32,6 +32,7 @@ class authController{
     async login(req, res) {          
         try{
 
+            console.log("req=================================================>>>", req)
         let { email , password } = req.body; 
             console.log('=> 11login', req.body); 
             //return 0;
