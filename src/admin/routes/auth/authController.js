@@ -32,13 +32,12 @@ class authController{
 
     async login(req, res) {          
         try{
-
-            console.log("req=================================================>>>", req)
         let { email , password } = req.body; 
             console.log('=> 11login', req.body); 
             //return 0;
 
             let userData = await Users.findOne({email: email})
+            console.log('=> userData', userData); 
             await Users.findOne({email: email}).exec(function(error, user) {
             if (error) {
                 console.log('=> error1', error); 
