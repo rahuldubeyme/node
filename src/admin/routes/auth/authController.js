@@ -20,8 +20,9 @@ class authController{
     };  
 
     async loginPage(req , res){
-        console.log('=> loginPage111111111');  
+        
         try{
+            console.log('=> loginPage111111111'); 
             req.flash('error', 'Your action was successful.');
            return res.render('login')
         }catch(err){
