@@ -49,7 +49,14 @@ app.get('/', (req, res) => {
   res.json({"message": "Welcome to application"});
 });
 
+const port = process.env.PORT;
+console.log(`Your port is ${port}`);
+const hostname = 'localhost';
 
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+ 
 
 app.use((req,res,next) => {
     res.locals.success = req.flash('success');
@@ -57,12 +64,14 @@ app.use((req,res,next) => {
     res.locals.user = req.session.user || {};
     res.locals.token = req.session.token || {};
     res.locals.SITE_URL = dotenv.parsed.SITEURL;
-    SITEURL = res.locals.SITE_URL;
+    SITEURLS = `http://${hostname}:${port}/`
+    
 
     next();
   });
 
-
+  global.app = express(); 
+  global.nodeAdminUrl = `http://${hostname}:${port}`;
 
 
 
@@ -72,14 +81,7 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   res.send(err.message);
 });
-const port = process.env.PORT;
-console.log(`Your port is ${port}`);
-const hostname = 'localhost';
 
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
-});
- 
 
 process.on('uncaughtException', function (err) { 
     console.log('Caught exception:...>> ' + err);
