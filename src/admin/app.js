@@ -23,7 +23,6 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json()); 
 app.use(flash()) 
-app.use(express.static('public'));
 app.use(expressSession({
     secret: "thisissessionkey",
     saveUninitialized:true,
@@ -32,9 +31,11 @@ app.use(expressSession({
 }));
 app.use(express.json());
 app.use('/', require('./routes'));
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views')) 
+
 app.use(express.static(__dirname +'/public'));  
+app.set('views', path.join(__dirname, 'views')) 
+app.set('view engine', 'ejs');
+
 app.use(flash())
 app.use(function (req, res, next) {
   res.header('Content-Type', 'application/json');
@@ -59,6 +60,8 @@ app.listen(port, hostname, () => {
  
 
 app.use((req,res,next) => {
+
+    res.locals.url = `http://${req.protocol}:${port}`;
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.user = req.session.user || {};

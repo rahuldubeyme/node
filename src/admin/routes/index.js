@@ -13,11 +13,12 @@ var app = express();
 
 let route = fs.readdirSync(__dirname);
 
+
 route.forEach((file) => {
-    console.log('file 23==>>',file)
-    if(file === 'index.js') return file;
-    app.use(`${file}`, require(`./${file}`))
+    if(file === 'index.js') return;
+    app.use(`/${file}`, require(`./${file}`))
 });
+
 
 
 router.get('/auth/auth-login', 
