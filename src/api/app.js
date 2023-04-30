@@ -1,12 +1,14 @@
+try{
+
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("dotenv").config();
-var indexRouter = require("./routes/index");
-var apiRouter = require("./routes/api");
 var apiResponse = require("./helpers/apiResponse");
 var cors = require("cors");
+var apiRouter = require("./routes");
+var app = express();
 
 // DB connection
 var MONGODB_URL = process.env.MONGODB_URL;
@@ -23,7 +25,6 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 		console.error("App starting error:", err.message);
 		process.exit(1);
 	});
-var db = mongoose.connection;
 
 var app = express();
 
@@ -41,15 +42,15 @@ app.use(cors());
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 
-const swaggerDocument = YAML.load('./swagger/swegger.yaml'); // Or JSON.parse() if you use JSON
 
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+// Load Swagger YAML file
+const swaggerDocument = YAML.load('./src/api/docs/swagger.yaml');
 
+// Mount Swagger UI middleware
+app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-//Route Prefixes
-app.use("/", indexRouter);
-app.use("/api/", apiRouter);
-
+// routers
+//app.use("/api/", apiRouter);
 // throw 404 if URL not found
 app.all("*", function(req, res) {
 	return apiResponse.notFoundResponse(res, "Page not found");
@@ -61,4 +62,23 @@ app.use((err, req, res) => {
 	}
 });
 
+/* port listening for api */
+const port = process.env.APIPORT;
+console.log(`Your port is ${port}`);
+const hostname = 'localhost';
+
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);
+});
+ 
+
+
 module.exports = app;
+
+}catch(erro){
+
+	const cwd = process.cwd();
+console.log("Current working directory:", cwd);
+
+		console.log('erro==>>', erro)
+}

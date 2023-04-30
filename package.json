@@ -23,13 +23,18 @@
     "ejs-locals": "^1.0.2",
     "express": "^4.18.2",
     "express-flash-messages": "^0.1.1",
+    "express-jwt": "^8.4.1",
     "express-session": "^1.17.3",
     "express-validator": "^6.14.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.29.4",
     "mongoose": "^6.7.5",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.9.1",
     "path": "^0.12.7",
-    "request": "^2.88.2"
+    "request": "^2.88.2",
+    "swagger-ui-express": "^4.6.2",
+    "yamljs": "^0.3.0"
   }
 }

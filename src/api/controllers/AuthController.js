@@ -9,38 +9,60 @@ const jwt = require("jsonwebtoken");
 const mailer = require("../helpers/mailer");
 const { constants } = require("../helpers/constants");
 
-/**
- * User registration.
- *
- * @param {string}      firstName
- * @param {string}      lastName
- * @param {string}      email
- * @param {string}      password
- *
- * @returns {Object}
- */
-exports.register = [
-	// Validate fields.
-	body("firstName").isLength({ min: 1 }).trim().withMessage("First name must be specified.")
-		.isAlphanumeric().withMessage("First name has non-alphanumeric characters."),
-	body("lastName").isLength({ min: 1 }).trim().withMessage("Last name must be specified.")
-		.isAlphanumeric().withMessage("Last name has non-alphanumeric characters."),
-	body("email").isLength({ min: 1 }).trim().withMessage("Email must be specified.")
-		.isEmail().withMessage("Email must be a valid email address.").custom((value) => {
-			return UserModel.findOne({email : value}).then((user) => {
+
+
+
+
+
+
+class authController{
+
+    async login(req, res) {          
+		try {
+			UserModel.findOne({email : req.body.email}).then(user => {
 				if (user) {
-					return Promise.reject("E-mail already in use");
+					//Compare given password with db's hash.
+					bcrypt.compare(req.body.password,user.password,function (err,same) {
+						if(same){
+							//Check account confirmation.
+							if(user.isConfirmed){
+								// Check User's account active or not.
+								if(user.status) {
+									let userData = {
+										_id: user._id,
+										firstName: user.firstName,
+										lastName: user.lastName,
+										email: user.email,
+									};
+									//Prepare JWT token for authentication
+									const jwtPayload = userData;
+									const jwtData = {
+										expiresIn: process.env.JWT_TIMEOUT_DURATION,
+									};
+									const secret = process.env.JWT_SECRET;
+									//Generated JWT token with Payload and secret.
+									userData.token = jwt.sign(jwtPayload, secret, jwtData);
+									return apiResponse.successResponseWithData(res,"Login Success.", userData);
+								}else {
+									return apiResponse.unauthorizedResponse(res, "Account is not active. Please contact admin.");
+								}
+							}else{
+								return apiResponse.unauthorizedResponse(res, "Account is not confirmed. Please confirm your account.");
+							}
+						}else{
+							return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
+						}
+					});
+				}else{
+					return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
 				}
 			});
-		}),
-	body("password").isLength({ min: 6 }).trim().withMessage("Password must be 6 characters or greater."),
-	// Sanitize fields.
-	sanitizeBody("firstName").escape(),
-	sanitizeBody("lastName").escape(),
-	sanitizeBody("email").escape(),
-	sanitizeBody("password").escape(),
-	// Process request after validation and sanitization.
-	(req, res) => {
+		} catch (err) {
+			return apiResponse.ErrorResponse(res, err);
+		}
+    }; 
+
+    async register(req , res){
 		try {
 			// Extract the validation errors from a request.
 			const errors = validationResult(req);
@@ -91,89 +113,11 @@ exports.register = [
 		} catch (err) {
 			//throw error in json response with status 500.
 			return apiResponse.ErrorResponse(res, err);
-		}
-	}];
+		}    
+    }
 
-/**
- * User login.
- *
- * @param {string}      email
- * @param {string}      password
- *
- * @returns {Object}
- */
-exports.login = [
-	body("email").isLength({ min: 1 }).trim().withMessage("Email must be specified.")
-		.isEmail().withMessage("Email must be a valid email address."),
-	body("password").isLength({ min: 1 }).trim().withMessage("Password must be specified."),
-	sanitizeBody("email").escape(),
-	sanitizeBody("password").escape(),
-	(req, res) => {
-		try {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
-			}else {
-				UserModel.findOne({email : req.body.email}).then(user => {
-					if (user) {
-						//Compare given password with db's hash.
-						bcrypt.compare(req.body.password,user.password,function (err,same) {
-							if(same){
-								//Check account confirmation.
-								if(user.isConfirmed){
-									// Check User's account active or not.
-									if(user.status) {
-										let userData = {
-											_id: user._id,
-											firstName: user.firstName,
-											lastName: user.lastName,
-											email: user.email,
-										};
-										//Prepare JWT token for authentication
-										const jwtPayload = userData;
-										const jwtData = {
-											expiresIn: process.env.JWT_TIMEOUT_DURATION,
-										};
-										const secret = process.env.JWT_SECRET;
-										//Generated JWT token with Payload and secret.
-										userData.token = jwt.sign(jwtPayload, secret, jwtData);
-										return apiResponse.successResponseWithData(res,"Login Success.", userData);
-									}else {
-										return apiResponse.unauthorizedResponse(res, "Account is not active. Please contact admin.");
-									}
-								}else{
-									return apiResponse.unauthorizedResponse(res, "Account is not confirmed. Please confirm your account.");
-								}
-							}else{
-								return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
-							}
-						});
-					}else{
-						return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
-					}
-				});
-			}
-		} catch (err) {
-			return apiResponse.ErrorResponse(res, err);
-		}
-	}];
-
-/**
- * Verify Confirm otp.
- *
- * @param {string}      email
- * @param {string}      otp
- *
- * @returns {Object}
- */
-exports.verifyConfirm = [
-	body("email").isLength({ min: 1 }).trim().withMessage("Email must be specified.")
-		.isEmail().withMessage("Email must be a valid email address."),
-	body("otp").isLength({ min: 1 }).trim().withMessage("OTP must be specified."),
-	sanitizeBody("email").escape(),
-	sanitizeBody("otp").escape(),
-	(req, res) => {
-		try {
+    async verifyConfirm(req, res) {  
+        try {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
@@ -206,22 +150,11 @@ exports.verifyConfirm = [
 			}
 		} catch (err) {
 			return apiResponse.ErrorResponse(res, err);
-		}
-	}];
+		} 
+    }; 
 
-/**
- * Resend Confirm otp.
- *
- * @param {string}      email
- *
- * @returns {Object}
- */
-exports.resendConfirmOtp = [
-	body("email").isLength({ min: 1 }).trim().withMessage("Email must be specified.")
-		.isEmail().withMessage("Email must be a valid email address."),
-	sanitizeBody("email").escape(),
-	(req, res) => {
-		try {
+    async resendConfirmOtp(req, res) {  
+        try {
 			const errors = validationResult(req);
 			if (!errors.isEmpty()) {
 				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
@@ -260,5 +193,10 @@ exports.resendConfirmOtp = [
 			}
 		} catch (err) {
 			return apiResponse.ErrorResponse(res, err);
-		}
-	}];
+		}  
+    }; 
+
+
+}
+
+module.exports = new authController() ;

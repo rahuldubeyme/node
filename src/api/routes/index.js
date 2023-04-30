@@ -1,9 +1,8 @@
 var express = require("express");
-var router = express.Router();
+var authRouter = require("./auth");
 
-/* GET home page. */
-router.get("/", function(req, res) {
-	res.render("index", { title: "Express" });
-});
+var app = express();
 
-module.exports = router;
+app.use("/auth/", authRouter);
+
+module.exports = app;

@@ -1,0 +1,166 @@
+openapi: 3.0.0
+info:
+  title: My API
+  version: 1.0.0
+tags:
+  - name: Authentication
+    description: APIs related to authentication
+  - name: Users
+    description: APIs related to users
+  - name: Settings
+    description: APIs related to settings
+  - name: Utils
+    description: APIs related to utils
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: Logs a user into the system
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /auth/sign-up:
+    post:
+      tags:
+        - Authentication
+      summary: Registers a new user
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+    
+  /auth/forget-password:
+    post:
+      tags:
+        - Authentication
+      summary: Sends a password reset email to the user's email address
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /auth/resend-otp:
+    post:
+      tags:
+        - Authentication
+      summary: Resends an OTP to the user's phone number
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - phone
+              properties:
+                phone:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /auth/verify-otp:
+    post:
+      tags:
+        - Authentication
+      summary: Verifies the OTP sent to the user's phone number
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - phone
+                - otp
+              properties:
+                phone:
+                  type: string
+                otp:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+
+  /user/profile:
+    get:
+      tags:
+        - Users
+      summary: Retrieves the current user's profile
+  
+  /user/update-profile:
+    post:
+      tags:
+        - Users
+      summary: Updates the current user's profile
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /setting/:
+    get:
+      tags:
+        - Settings
+      summary: Retrieves system settings
+      responses:
+        '200':
+          description: OK
