@@ -1,97 +1,64 @@
-var express = require('express'); 
+var express = require("express");
+var path = require("path");
+var cookieParser = require("cookie-parser");
+var logger = require("morgan");
+require("dotenv").config();
+var indexRouter = require("./routes/index");
+var apiRouter = require("./routes/api");
+var apiResponse = require("./helpers/apiResponse");
+var cors = require("cors");
+
+// DB connection
+var MONGODB_URL = process.env.MONGODB_URL;
+var mongoose = require("mongoose");
+mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => {
+	//don't show the log when it is test
+	if(process.env.NODE_ENV !== "test") {
+		console.log("Connected to %s", MONGODB_URL);
+		console.log("App is running ... \n");
+		console.log("Press CTRL + C to stop the process. \n");
+	}
+})
+	.catch(err => {
+		console.error("App starting error:", err.message);
+		process.exit(1);
+	});
+var db = mongoose.connection;
+
 var app = express();
-const moment = require('moment');
-var http = require('http');
-var connect = require('connect');
-const fs = require("fs"); 
-const request = require('request');
-const flash = require('connect-flash');
 
-var path = require('path'); 
-const dotenv = require('dotenv').config();
-
-const cors = require('cors');
-const bodyParser = require('body-parser'); 
-app.use(cors()); 
-var cookieParser = require('cookie-parser');
-var expressSession = require('express-session');
-app.use(cookieParser()); 
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(bodyParser.json()); 
-//app.use(express.static(__dirname +'/public')); 
-app.use(flash()) 
-app.use(express.static(path.join(__dirname, 'public')));
-app.use('/public', express.static('public'));
-
-const connectPool = require('../../config/db'); 
-const oneDay = 1000 * 60 * 60 * 24;
-app.use(expressSession({
-    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
-    saveUninitialized:true,
-    cookie: { maxAge: oneDay },
-    resave: false 
-}));
-app.use(cookieParser());
-// parsing the incoming data
+//don't show the log when it is test
+if(process.env.NODE_ENV !== "test") {
+	app.use(logger("dev"));
+}
 app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, "public")));
 
-app.use('/', require('./routes'));
-app.set('view engine', 'ejs')
-app.set('views', path.join(__dirname, 'views')) 
-app.get('/', function (req, res) {
-    res.render('login')
+//To allow cross-origin requests
+app.use(cors());
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
+
+const swaggerDocument = YAML.load('./swagger/swegger.yaml'); // Or JSON.parse() if you use JSON
+
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+
+
+//Route Prefixes
+app.use("/", indexRouter);
+app.use("/api/", apiRouter);
+
+// throw 404 if URL not found
+app.all("*", function(req, res) {
+	return apiResponse.notFoundResponse(res, "Page not found");
 });
 
- 
-
-
-
-
-//jwt varify token
-app.use(function(req, res, next) {
-    if (req.headers && req.headers.authorization && req.headers.authorization.split(' ')[0] === 'JWT') {
-      jsonwebtoken.verify(req.headers.authorization.split(' ')[1], 'randomString', function(err, decode) {
-        if (err) req.user = undefined;
-        req.user = decode;
-        next();
-      });
-    } else {
-      req.user = undefined;
-      next();
-    }
-  });
-
-
-
-
-app.use((req,res,next) => {
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-    res.locals.user = 'user';
-    res.locals.SITE_URL = dotenv.parsed.SITEURL;
-    next();
-  });
-
-
-
-
-
-app.use(function (err, req, res, next) {
-  res.status(err.status || 500);
-  res.send(err.message);
+app.use((err, req, res) => {
+	if(err.name == "UnauthorizedError"){
+		return apiResponse.unauthorizedResponse(res, err.message);
+	}
 });
-const port = process.env.PORT || 2100;
-console.log(`Your port is ${port}`);
-
-var server = app.listen(port, function () { 
-    
-    console.log("Example app listening at http://localhost:%s", server.address().port);
-});   
-
-process.on('uncaughtException', function (err) { 
-    console.log('Caught exception: ' + err);
-});
-
 
 module.exports = app;
