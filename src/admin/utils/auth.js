@@ -6,25 +6,28 @@ class varifyClass{
   async varifyToken(req, res, next){
     try{
       const { user } = req;
-      //console.log('token sessiion _id==>',req.session.user._id)
 
-      console.log('token sessiion _id==>',req.session.token)
+      console.log('token==>',req.session.token)
         
           jwt.verify(req.session.token, "secret-key", (err, decoded) => {
       
           console.log('token1==>',decoded, "err=>, err", err)
 
-            if (decoded != undefined) {
-              console.log('111111111111')
+            if(!decoded || !decoded == null) {
+              return res.redirect('auth/login');
+            }
+
+            if(decoded != undefined) {
               let userData = Users.findOne({
                 iat : decoded.iat
               })
+
               console.log('verified user==>>', decoded._id)
               res.user = decoded;
+              res.session.user = decoded;
               next();
-              //return res.render('index');
             }else{
-              return res.redirect('auth/auth-login');
+              return res.redirect('auth/login');
             }              
           });
 

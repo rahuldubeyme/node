@@ -30,7 +30,6 @@ app.use(expressSession({
     resave: false 
 }));
 app.use(express.json());
-app.use('/', require('./routes'));
 
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));

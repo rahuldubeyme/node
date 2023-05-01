@@ -16,23 +16,27 @@ let route = fs.readdirSync(__dirname);
 
 route.forEach((file) => {
     if(file === 'index.js') return;
-    app.use(`/${file}`, require(`./${file}`))
+    console.log("routing==>>>", file)
+    app.use(`${file}`, require(`./${file}`))
 });
 
+router.get('/auth/login', function(req, res) {
+  res.send('Hello World 2!');
+  return;
+});
+
+// router.get('/auth/auth-login', 
+// // function(req, res) {
+// //     res.send('Hello World!');
+// //     //return;
+// //   },
+//   AuthController.loginPage
+//   );
 
 
-router.get('/auth/auth-login', 
-// function(req, res) {
-//     res.send('Hello World!');
-//     //return;
-//   },
-  AuthController.loginPage
-  );
-
-
-router.post('/auth/auth-login', 
-    AuthController.login
-    );
+// router.post('/auth/auth-login', 
+//     AuthController.login
+//     );
 
 router.get('/',token, AuthController.dashboard); 
 
