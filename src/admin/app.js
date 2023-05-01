@@ -32,10 +32,15 @@ app.use(expressSession({
 app.use(express.json());
 app.use('/', require('./routes'));
 
+// Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.set('views', path.join(__dirname, 'views')) 
+// Set views folder
+app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+
+// Routes
+app.use('/', require('./routes'));
 
 app.use(flash())
 app.use(function (req, res, next) {
