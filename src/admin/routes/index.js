@@ -20,6 +20,8 @@ route.forEach((file) => {
     app.use(`${file}`, require(`./${file}`))
 });
 
+console.log('check use route==>'  )
+
 router.get('/auth/login', function(req, res) {
   res.send('Hello World 2!');
   return;
