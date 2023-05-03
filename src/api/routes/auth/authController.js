@@ -1,24 +1,15 @@
-const UserModel = require("../models/UserModel");
-const { body,validationResult } = require("express-validator");
-const { sanitizeBody } = require("express-validator");
-//helper file to prepare responses.
-const apiResponse = require("../helpers/apiResponse");
-const utility = require("../helpers/utility");
-const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const mailer = require("../helpers/mailer");
-const { constants } = require("../helpers/constants");
+const { Users } = require('../../../../models'); 
+const jwt = require("jsonwebtoken");  
+const request = require('request');
 
-
-
-
-
-
+console.log("===============>>>>login");
 
 class authController{
 
+	
     async login(req, res) {          
 		try {
+			console.log("===============>>>>login");
 			UserModel.findOne({email : req.body.email}).then(user => {
 				if (user) {
 					//Compare given password with db's hash.

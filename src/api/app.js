@@ -50,7 +50,16 @@ const swaggerDocument = YAML.load('./src/api/docs/swagger.yaml');
 app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routers
-//app.use("/api/", apiRouter);
+app.use("/", apiRouter);
+
+
+app.post('/auth/login', (req, res) => {
+	console.log('API endpoint hit');
+	res.send('Response from API endpoint');
+  });
+
+
+
 // throw 404 if URL not found
 app.all("*", function(req, res) {
 	return apiResponse.notFoundResponse(res, "Page not found");

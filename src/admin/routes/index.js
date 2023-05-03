@@ -13,12 +13,12 @@ var app = express();
 
 let route = fs.readdirSync(__dirname);
 
-
 route.forEach((file) => {
     if(file === 'index.js') return;
-    console.log("routing==>>>", file)
-    app.use(`${file}`, require(`./${file}`))
+    console.log("file==>>>", file)
+    app.use(`/${file}`, require(`./${file}`))
 });
+
 
 console.log('check use route==>'  )
 
