@@ -1,3 +1,35 @@
+let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+	// Html email body
+					//let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
+					// Send confirmation email
+					/* mailer.send(
+						constants.confirmEmails.from, 
+						params.email,
+						"Confirm Account",
+						html
+					).then(function(){
+						// Save user.
+						user.save(function (err) {
+							if (err) { return apiResponse.ErrorResponse(res, err); }
+							let userData = {
+								_id: user._id,
+								firstName: user.firstName,
+								lastName: user.lastName,
+								email: user.email
+							};
+							return apiResponse.successResponseWithData(res,"Registration Success.", userData);
+						});
+					}).catch(err => {
+						console.log(err);
+						return apiResponse.ErrorResponse(res,err);
+					}) ; */
+
+
+
+
+
 <%- include('./header'); %>
 <%- include('./footer'); %>
 

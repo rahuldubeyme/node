@@ -1,37 +1,47 @@
 const mongoose = require('mongoose');
 const bcrypt = require("bcryptjs")
 const UserSchema = mongoose.Schema({
-    firstname : {
+    userName : {
         type : String,
         default : ''
     },
-    lastname : {
+    firstName : {
+        type : String,
+        default : ''
+    },
+    lastName : {
         type : String,
         default : ''
     },
     email : {
         type : String,
-        default : ''
+        required : true
     },
     password : {
-        type : String,
-        default : ''
+        type : String
     },
-    profilepic : {
-        type : String,
-        default : ''
+    avatar : {
+        type : String
     },
-    phone : {
-        type : String,
-        default : ''
+    mobile : {
+        type : String
     },
-    countrycode : {
-        type : String,
-        default : ''
+    countryCode : {
+        type : String
     },
-    roleid  : {
-        type : String,
-        default : ''
+    formattedNumber : {
+        type : String
+    },
+    isMobileVarify : {
+        type : Boolean,
+        default : false
+    },
+    isEmailVarify : {
+      type : Boolean,
+      default : false
+    },
+    roleId  : {
+        type : String
     },
     isDeleted : {
         type : Boolean,
@@ -41,13 +51,15 @@ const UserSchema = mongoose.Schema({
         type : Boolean,
         default : false
     },
+    isSuspended : {
+        type : Boolean,
+        default : false
+    },
     createdAt   : {
-        type : Date,
-        default : ''
+        type : Date
     },
     updatedAt  : {
-        type : Date,
-        default : ''
+        type : Date
     },  
 }, {
     timestamps: true

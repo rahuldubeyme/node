@@ -1,16 +1,20 @@
-const { Users } = require('../../../../models'); 
+const { Users, TempMobile } = require('../../../../models'); 
 const jwt = require("jsonwebtoken");  
 const request = require('request');
+var apiResponse = require("../../helpers/apiResponse");
 
-console.log("===============>>>>login");
 
 class authController{
 
 	
     async login(req, res) {          
 		try {
-			console.log("===============>>>>login");
-			UserModel.findOne({email : req.body.email}).then(user => {
+
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+			console.log("===============>>>>login", body);
+			Users.findOne({email : req.body.email}).then(user => {
 				if (user) {
 					//Compare given password with db's hash.
 					bcrypt.compare(req.body.password,user.password,function (err,same) {
@@ -49,61 +53,61 @@ class authController{
 				}
 			});
 		} catch (err) {
+			console.log("error==>", err)
 			return apiResponse.ErrorResponse(res, err);
 		}
     }; 
 
     async register(req , res){
 		try {
-			// Extract the validation errors from a request.
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				// Display sanitized values/errors messages.
-				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
-			}else {
-				//hash input password
-				bcrypt.hash(req.body.password,10,function(err, hash) {
-					// generate OTP for confirmation
-					let otp = utility.randomNumber(4);
-					// Create User object with escaped and trimmed data
-					var user = new UserModel(
-						{
-							firstName: req.body.firstName,
-							lastName: req.body.lastName,
-							email: req.body.email,
-							password: hash,
-							confirmOTP: otp
-						}
-					);
-					// Html email body
-					let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
-					// Send confirmation email
-					mailer.send(
-						constants.confirmEmails.from, 
-						req.body.email,
-						"Confirm Account",
-						html
-					).then(function(){
-						// Save user.
-						user.save(function (err) {
-							if (err) { return apiResponse.ErrorResponse(res, err); }
-							let userData = {
-								_id: user._id,
-								firstName: user.firstName,
-								lastName: user.lastName,
-								email: user.email
-							};
-							return apiResponse.successResponseWithData(res,"Registration Success.", userData);
-						});
-					}).catch(err => {
-						console.log(err);
-						return apiResponse.ErrorResponse(res,err);
-					}) ;
-				});
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+			console.log('body==>>', body);
+
+			let userExist = await Users.findOne({
+				mobile : body.mobile,
+				isMobileVarify : true
+			})
+
+			
+			if(!userExist){
+				let otp = utility.generateOTP(4);
+				let tempMobile = new TempMobile();
+				tempMobile.mobileNumber = body.mobile,
+				tempMobile.verificationCode = otp
+				await tempMobile.save(); 
+
+				console.log('tempMobile=>',tempMobile, otp)
+	
+	
+					let user = new Users()
+	
+					user.userName = body.userName;
+					user.firstName = body.firstName;
+					user.lastName = body.lastName;
+					user.email = body.email;
+					user.countryCode = body.countryCode;
+					user.mobile = body.mobile;
+					user.password = body.password;
+		
+					await user.save();
+
+					return res.send({
+						user : user
+					})
+	
+					return apiResponse.success(res,"Otp sent on your registred mobile", user);
+			}else{
+			
+				console.log('userExist=>', userExist);
+				//return 0
+				return apiResponse.notFound(res,"Mobile number already registered.");
 			}
+			
 		} catch (err) {
 			//throw error in json response with status 500.
-			return apiResponse.ErrorResponse(res, err);
+			return apiResponse.Error(res, err);
 		}    
     }
 

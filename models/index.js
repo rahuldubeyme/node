@@ -1,5 +1,6 @@
 class models{
      Users = require('./user');
+     TempMobile = require('./tempMobile');
 
 
 }

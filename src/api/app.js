@@ -9,7 +9,11 @@ var apiResponse = require("./helpers/apiResponse");
 var cors = require("cors");
 var apiRouter = require("./routes");
 var app = express();
+const bodyParser = require('body-parser');
 
+// Configure body-parser middleware
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 // DB connection
 var MONGODB_URL = process.env.MONGODB_URL;
 var mongoose = require("mongoose");
@@ -47,16 +51,16 @@ const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./src/api/docs/swagger.yaml');
 
 // Mount Swagger UI middleware
-app.use('/', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // routers
 app.use("/", apiRouter);
 
 
-app.post('/auth/login', (req, res) => {
+/* app.post('/auth/login', (req, res) => {
 	console.log('API endpoint hit');
 	res.send('Response from API endpoint');
-  });
+  }); */
 
 
 

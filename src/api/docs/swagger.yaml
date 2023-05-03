@@ -12,7 +12,7 @@ tags:
   - name: Utils
     description: APIs related to utils
 paths:
-  /auth/login:
+  /auth/log-in:
     post:
       tags:
         - Authentication
@@ -47,10 +47,25 @@ paths:
             schema:
               type: object
               required:
-                - username
+                - userName
+                - firstName
+                - lastName
+                - email
+                - countryCode
+                - mobile
                 - password
               properties:
-                username:
+                userName:
+                  type: string
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                countryCode:
+                  type: string
+                mobile:
                   type: string
                 password:
                   type: string
