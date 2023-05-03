@@ -51,10 +51,6 @@ app.use(express.urlencoded({limit: '100mb',extended: true }));
 
 
 
-app.get('/', (req, res) => {
-  res.json({"message": "Welcome to application"});
-});
-
 const port = process.env.PORT;
 console.log(`Your port is ${port}`);
 const hostname = 'localhost';

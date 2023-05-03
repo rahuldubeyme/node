@@ -22,10 +22,10 @@ route.forEach((file) => {
 
 console.log('check use route==>'  )
 
-router.get('/auth/login', function(req, res) {
-  res.send('Hello World 2!');
-  return;
-});
+// router.get('/auth/login', function(req, res) {
+//   res.send('Hello World 2!');
+//   return;
+// });
 
 // router.get('/auth/auth-login', 
 // // function(req, res) {

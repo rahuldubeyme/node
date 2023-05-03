@@ -14,7 +14,7 @@ class varifyClass{
           console.log('token1==>',decoded, "err=>, err", err)
 
             if(!decoded || !decoded == null) {
-              return res.redirect('auth/login');
+              return res.redirect('/auth/login');
             }
 
             if(decoded != undefined) {
@@ -27,7 +27,7 @@ class varifyClass{
               res.session.user = decoded;
               next();
             }else{
-              return res.redirect('auth/login');
+              return res.redirect('/auth/login');
             }              
           });
 
