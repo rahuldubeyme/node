@@ -3,6 +3,10 @@ const jwt = require("jsonwebtoken");
 const request = require('request');
 var apiResponse = require("../../helpers/apiResponse");
 
+const utility = require('../../helpers/utility');
+const now = new Date();
+const fiveMinutesLater = new Date(now.getTime() + (5 * 60 * 1000));
+
 
 class authController{
 
@@ -63,25 +67,23 @@ class authController{
 			let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
 
-			console.log('body==>>', body);
-
-			let userExist = await Users.findOne({
-				mobile : body.mobile,
-				isMobileVarify : true
-			})
-
 			
-			if(!userExist){
-				let otp = utility.generateOTP(4);
-				let tempMobile = new TempMobile();
-				tempMobile.mobileNumber = body.mobile,
-				tempMobile.verificationCode = otp
-				await tempMobile.save(); 
 
-				console.log('tempMobile=>',tempMobile, otp)
-	
-	
-					let user = new Users()
+			let x = await Users.findOne({ email : body.email, isEmailVarify : true, isDeleted : false })
+
+			let y = await Users.findOne({ mobile : body.mobile, isMobileVarify : true, isDeleted : false })
+			
+
+			if(x){
+				return apiResponse.warn(res,"Email already exist.", {});
+			}else
+			if(y){
+				return apiResponse.warn(res,"Mobile number already exist.", {});
+			}else {
+				
+				let user = Users()
+
+				
 	
 					user.userName = body.userName;
 					user.firstName = body.firstName;
@@ -93,18 +95,35 @@ class authController{
 		
 					await user.save();
 
-					return res.send({
-						user : user
-					})
+					
+					//here is js not working
+
+					let otp = utility.generateOTP(4);
+
+					console.log('body1=2=>>', body, "user=>", utility.generateOTP(4));
+					
+					
+					let tempMobile = TempMobile();
+					tempMobile.mobileNumber = body.mobile,
+					tempMobile.verificationCode = otp,
+					tempMobile.validTillAt = fiveMinutesLater.valueOf()
+					await tempMobile.save(); 
+
+					/* sign token */
+
+					const token = utility.signInToken(user)
+
+					//return res.send()
+					let userJSON = {
+						user : user._id,
+						mobile : user.mobile,
+						token : token,
+						otp : otp
+					}
 	
-					return apiResponse.success(res,"Otp sent on your registred mobile", user);
-			}else{
-			
-				console.log('userExist=>', userExist);
-				//return 0
-				return apiResponse.notFound(res,"Mobile number already registered.");
+					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
 			}
-			
+
 		} catch (err) {
 			//throw error in json response with status 500.
 			return apiResponse.Error(res, err);
@@ -113,10 +132,23 @@ class authController{
 
     async verifyConfirm(req, res) {  
         try {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
-			}else {
+
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+			let x = await TempMobile.findOne({ mobileNumber : body.mobile , verificationCode : body.otp })
+
+			if(x.validTillAt < now.valueOf()){
+					//otp expire
+			}else{
+
+			}
+
+			console.log('======verify otp==>>', body);
+
+
+			return 0;
+
 				var query = {email : req.body.email};
 				UserModel.findOne(query).then(user => {
 					if (user) {
@@ -144,7 +176,7 @@ class authController{
 				});
 			}
 		} catch (err) {
-			return apiResponse.ErrorResponse(res, err);
+			return apiResponse.Error(res, err);
 		} 
     }; 
 

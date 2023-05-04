@@ -117,7 +117,7 @@ paths:
         '401':
           description: Unauthorized
   
-  /auth/verify-otp:
+  /auth/varify-otp:
     post:
       tags:
         - Authentication
@@ -128,12 +128,15 @@ paths:
             schema:
               type: object
               required:
-                - phone
+                - mobile
+                - token
                 - otp
               properties:
-                phone:
+                mobile:
                   type: string
                 otp:
+                  type: number
+                token:
                   type: string
       responses:
         '200':

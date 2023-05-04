@@ -10,7 +10,7 @@ const AuthController =  require('./authController');
 
 router.post("/sign-up", AuthController.register);
 router.post("/log-in", AuthController.login);
-router.post("/verify-otp", AuthController.verifyConfirm);
+router.post("/varify-otp", AuthController.verifyConfirm);
 router.post("/resend-verify-otp", AuthController.resendConfirmOtp);
 
 module.exports = router;   

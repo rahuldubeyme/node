@@ -14,6 +14,10 @@ const tempMobileSchema = new Schema({
     type: String,
     required: true
   },
+  validTillAt: {
+    type: Number,
+    required: true
+  },
   createdAt: {
     type: Date,
     default: Date.now,
