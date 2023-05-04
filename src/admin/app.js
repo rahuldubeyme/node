@@ -8,6 +8,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser'); 
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
+const ejs = require('ejs');
 
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true
@@ -31,12 +32,14 @@ app.use(expressSession({
 }));
 app.use(express.json());
 
+// Set views folder
+app.set('views', path.join(__dirname, 'views'));
 // Set static folder
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Set views folder
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+
+
+console.log('check dir==>', __dirname)
 
 // Routes
 app.use('/', require('./routes'));
