@@ -11,6 +11,11 @@ tags:
     description: APIs related to settings
   - name: Utils
     description: APIs related to utils
+components:
+  securitySchemes:
+    Token-Authentication:
+      type: http
+      scheme: bearer
 paths:
   /auth/log-in:
     post:
@@ -33,6 +38,13 @@ paths:
       responses:
         '200':
           description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
         '401':
           description: Unauthorized
   
@@ -149,12 +161,16 @@ paths:
       tags:
         - Users
       summary: Retrieves the current user's profile
+      security:
+        - Token-Authentication: []
   
   /user/update-profile:
     post:
       tags:
         - Users
       summary: Updates the current user's profile
+      security:
+        - Token-Authentication: []
       requestBody:
         content:
           application/x-www-form-urlencoded:
@@ -179,6 +195,8 @@ paths:
       tags:
         - Settings
       summary: Retrieves system settings
+      security:
+        - Token-Authentication: []
       responses:
         '200':
           description: OK

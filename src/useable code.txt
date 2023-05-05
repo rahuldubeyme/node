@@ -2,6 +2,13 @@ let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
 
 
+
+
+
+              const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+
+
 			
 							// Html email body
 							/* let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
