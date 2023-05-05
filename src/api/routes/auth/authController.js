@@ -1,11 +1,13 @@
 const { Users, TempMobile } = require('../../../../models'); 
 const jwt = require("jsonwebtoken");  
 const request = require('request');
+const bcrypt = require("bcryptjs")
 var apiResponse = require("../../helpers/apiResponse");
+const { ObjectId } = require('mongodb');
 
 const utility = require('../../helpers/utility');
 const now = new Date();
-const fiveMinutesLater = new Date(now.getTime() + (5 * 60 * 1000));
+const fiveMinutesLater = new Date(now.getTime() + (50 * 60 * 1000));
 
 
 class authController{
@@ -18,15 +20,15 @@ class authController{
 			const body = Object.assign({}, params);
 
 			console.log("===============>>>>login", body);
-			Users.findOne({email : req.body.email}).then(user => {
+			Users.findOne({$or : [{email : body.email}, { mobile : body.email}], isDeleted : false, isMobileVarify : true}).then(user => {
 				if (user) {
 					//Compare given password with db's hash.
-					bcrypt.compare(req.body.password,user.password,function (err,same) {
+					bcrypt.compare(body.password,user.password,function (err,same) {
 						if(same){
 							//Check account confirmation.
-							if(user.isConfirmed){
+							if(user){
 								// Check User's account active or not.
-								if(user.status) {
+								if(user.isMobileVarify) {
 									let userData = {
 										_id: user._id,
 										firstName: user.firstName,
@@ -41,24 +43,24 @@ class authController{
 									const secret = process.env.JWT_SECRET;
 									//Generated JWT token with Payload and secret.
 									userData.token = jwt.sign(jwtPayload, secret, jwtData);
-									return apiResponse.successResponseWithData(res,"Login Success.", userData);
+									return apiResponse.success(res,"Login Success.", userData);
 								}else {
-									return apiResponse.unauthorizedResponse(res, "Account is not active. Please contact admin.");
+									return apiResponse.unauthorized(res, "Account is not active. Please contact admin.");
 								}
 							}else{
-								return apiResponse.unauthorizedResponse(res, "Account is not confirmed. Please confirm your account.");
+								return apiResponse.unauthorized(res, "Account is not confirmed. Please confirm your account.");
 							}
 						}else{
-							return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
+							return apiResponse.unauthorized(res, "Email or Password wrong.");
 						}
 					});
 				}else{
-					return apiResponse.unauthorizedResponse(res, "Email or Password wrong.");
+					return apiResponse.unauthorized(res, "Email or Password wrong.");
 				}
 			});
 		} catch (err) {
 			console.log("error==>", err)
-			return apiResponse.ErrorResponse(res, err);
+			return apiResponse.Error(res, err);
 		}
     }; 
 
@@ -111,7 +113,9 @@ class authController{
 
 					/* sign token */
 
-					const token = utility.signInToken(user)
+					console.log("payload==>>",user )
+					const token = utility.signInTempToken(user)
+					console.log("payload==>>",token )
 
 					//return res.send()
 					let userJSON = {
@@ -138,88 +142,80 @@ class authController{
 
 			let x = await TempMobile.findOne({ mobileNumber : body.mobile , verificationCode : body.otp })
 
-			if(x.validTillAt < now.valueOf()){
+			if(x.validTillAt < now.valueOf() || !x){
 					//otp expire
+					return apiResponse.success(res,"Otp is Expired", {});
 			}else{
+				const decoded = utility.varifyTempToken(body.token);
+					// If the token is valid, the decoded object will contain the payload data
+					
+				if(!decoded){
+					return apiResponse.success(res,"Token is Expired", {});
+				}
 
-			}
+				console.log('perm-token decoded 1==>>', decoded);
 
-			console.log('======verify otp==>>', body);
-
-
-			return 0;
-
-				var query = {email : req.body.email};
-				UserModel.findOne(query).then(user => {
-					if (user) {
-						//Check already confirm or not.
-						if(!user.isConfirmed){
-							//Check account confirmation.
-							if(user.confirmOTP == req.body.otp){
-								//Update user as confirmed
-								UserModel.findOneAndUpdate(query, {
-									isConfirmed: 1,
-									confirmOTP: null 
-								}).catch(err => {
-									return apiResponse.ErrorResponse(res, err);
-								});
-								return apiResponse.successResponse(res,"Account confirmed success.");
-							}else{
-								return apiResponse.unauthorizedResponse(res, "Otp does not match");
-							}
-						}else{
-							return apiResponse.unauthorizedResponse(res, "Account already confirmed.");
+				let user = await Users.findOneAndUpdate({
+					_id : new ObjectId(decoded.id)
+				 },
+				 	{
+						$set : {
+							isMobileVarify : true
 						}
-					}else{
-						return apiResponse.unauthorizedResponse(res, "Specified email not found.");
 					}
-				});
+				 )
+
+				 console.log('perm-token decoded 2==>>', decoded);
+
+				 /* set perm token */
+				 const token = utility.signInToken(user)
+
+				 console.log('perm-token==>>', token);
+
+				 let userJSON = {
+					token : token
+				}
+
+				return apiResponse.success(res,"Registration successfully completed", userJSON);
+				
+			}
+			
+		} catch (err) {
+			return res.send(err);
+		} 	
+    }; 
+
+    async resendOtp(req, res) {  
+        try {
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+			console.log('params==>>', body)
+
+			let user = await Users.findOne({ mobile : body.mobile, isDeleted : false })
+
+			if(!user){
+				return apiResponse.success(res,"Mobile number is not exist", {});
+			}else{
+				let otp = utility.generateOTP(4);
+				let tempMobile = TempMobile();
+					tempMobile.mobileNumber = body.mobile,
+					tempMobile.verificationCode = otp,
+					tempMobile.validTillAt = fiveMinutesLater.valueOf()
+					await tempMobile.save();
+
+					const token = utility.signInTempToken(user)
+
+					let userJSON = {
+						mobile : user.mobile,
+						token : token,
+						otp : otp
+					}
+	
+					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
+
 			}
 		} catch (err) {
 			return apiResponse.Error(res, err);
-		} 
-    }; 
-
-    async resendConfirmOtp(req, res) {  
-        try {
-			const errors = validationResult(req);
-			if (!errors.isEmpty()) {
-				return apiResponse.validationErrorWithData(res, "Validation Error.", errors.array());
-			}else {
-				var query = {email : req.body.email};
-				UserModel.findOne(query).then(user => {
-					if (user) {
-						//Check already confirm or not.
-						if(!user.isConfirmed){
-							// Generate otp
-							let otp = utility.randomNumber(4);
-							// Html email body
-							let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
-							// Send confirmation email
-							mailer.send(
-								constants.confirmEmails.from, 
-								req.body.email,
-								"Confirm Account",
-								html
-							).then(function(){
-								user.isConfirmed = 0;
-								user.confirmOTP = otp;
-								// Save user.
-								user.save(function (err) {
-									if (err) { return apiResponse.ErrorResponse(res, err); }
-									return apiResponse.successResponse(res,"Confirm otp sent.");
-								});
-							});
-						}else{
-							return apiResponse.unauthorizedResponse(res, "Account already confirmed.");
-						}
-					}else{
-						return apiResponse.unauthorizedResponse(res, "Specified email not found.");
-					}
-				});
-			}
-		} catch (err) {
-			return apiResponse.ErrorResponse(res, err);
 		}  
     }; 
 

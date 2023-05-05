@@ -20,8 +20,7 @@ const tempMobileSchema = new Schema({
   },
   createdAt: {
     type: Date,
-    default: Date.now,
-    expires: 300 // The document will expire after 5 minutes (300 seconds)
+    default: Date.now
   }
 });
 

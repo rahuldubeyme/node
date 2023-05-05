@@ -1,6 +1,39 @@
 let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
 
+
+			
+							// Html email body
+							/* let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
+							// Send confirmation email
+							mailer.send(
+								constants.confirmEmails.from, 
+								req.body.email,
+								"Confirm Account",
+								html
+							).then(function(){
+								user.isConfirmed = 0;
+								user.confirmOTP = otp;
+								// Save user.
+								user.save(function (err) {
+									if (err) { return apiResponse.ErrorResponse(res, err); }
+									return apiResponse.successResponse(res,"Confirm otp sent.");
+								});
+							}); */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 	// Html email body
 					//let html = "<p>Please Confirm your Account.</p><p>OTP: "+otp+"</p>";
 					// Send confirmation email

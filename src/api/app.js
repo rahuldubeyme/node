@@ -66,7 +66,8 @@ app.use("/", apiRouter);
 
 // throw 404 if URL not found
 app.all("*", function(req, res) {
-	return apiResponse.notFoundResponse(res, "Page not found");
+	res.redirect('/docs')
+	return res.send("Page not found");
 });
 
 app.use((err, req, res) => {

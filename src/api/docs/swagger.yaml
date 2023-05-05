@@ -23,10 +23,10 @@ paths:
             schema:
               type: object
               required:
-                - username
+                - email
                 - password
               properties:
-                username:
+                email:
                   type: string
                 password:
                   type: string
@@ -107,9 +107,9 @@ paths:
             schema:
               type: object
               required:
-                - phone
+                - mobile
               properties:
-                phone:
+                mobile:
                   type: string
       responses:
         '200':

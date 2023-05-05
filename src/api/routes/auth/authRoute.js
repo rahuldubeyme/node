@@ -11,6 +11,6 @@ const AuthController =  require('./authController');
 router.post("/sign-up", AuthController.register);
 router.post("/log-in", AuthController.login);
 router.post("/varify-otp", AuthController.verifyConfirm);
-router.post("/resend-verify-otp", AuthController.resendConfirmOtp);
+router.post("/resend-otp", AuthController.resendOtp);
 
 module.exports = router;   

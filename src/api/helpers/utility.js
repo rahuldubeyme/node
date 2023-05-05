@@ -25,10 +25,11 @@ module.exports = {
 			id: user._id
 		};
 
-		return jwt.sign(payload, process.env.JWT_TEMP_SECRET, { expiresIn: '1h' });
+		return jwt.sign(payload, process.env.JWT_TEMP_SECRET);
 	},
 
-	VarifyTempToken: function (token) {
+	varifyTempToken: function (token) {
+
 		return jwt.verify(token, process.env.JWT_TEMP_SECRET);
 	},
 	
@@ -38,10 +39,10 @@ module.exports = {
 			id: user._id
 		};
 
-		return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1h' });
+		return jwt.sign(payload, process.env.JWT_SECRET);
 	},
 
-	VarifyToken: function (token) {
+	varifyToken: function (token) {
 		return jwt.verify(token, process.env.JWT_SECRET);
 	}
 };
