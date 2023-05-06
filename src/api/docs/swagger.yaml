@@ -33,8 +33,10 @@ paths:
               properties:
                 email:
                   type: string
+                  example: "rahuldubey@yopmail.com"
                 password:
                   type: string
+                  example: "Admin@123"
       responses:
         '200':
           description: OK
@@ -156,7 +158,7 @@ paths:
         '401':
           description: Unauthorized
 
-  /user/profile:
+  /users/profile:
     get:
       tags:
         - Users
@@ -164,7 +166,7 @@ paths:
       security:
         - Token-Authentication: []
   
-  /user/update-profile:
+  /users/update-profile:
     post:
       tags:
         - Users

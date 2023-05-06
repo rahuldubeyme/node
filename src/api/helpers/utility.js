@@ -1,4 +1,7 @@
 const jwt = require('jsonwebtoken');
+var apiResponse = require("../helpers/apiResponse");
+const { Users, TempMobile } = require('../../../models'); 
+
 
 module.exports = {
 	randomNumber: function (length) {
@@ -42,7 +45,42 @@ module.exports = {
 		return jwt.sign(payload, process.env.JWT_SECRET);
 	},
 
-	varifyToken: function (token) {
-		return jwt.verify(token, process.env.JWT_SECRET);
-	}
+	varifyToken(req, res, next){
+		try{
+
+			const authorizationHeader = req.headers.authorization;
+			const token = authorizationHeader.split(' ')[1]; 
+
+			
+			  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+	
+				if(!decoded || !decoded == null) {
+					return apiResponse.unauthorized({}, "Token is expired.");
+				}
+	
+				if(decoded != undefined) {
+				  Users.findOne({
+					_id : decoded._id,
+					iat : decoded.iat
+				  }).then(user => {
+					if(user.isSuspended){
+						return apiResponse.unauthorized({}, "User is suspended.");
+					}
+					if(user.isDeleted){
+						return apiResponse.unauthorized({}, "User is deleted.");
+					}
+					console.log("user in verifyToken=>", user._id)
+					res.user = user;
+					res.session = user;
+					next();
+				  })				  
+				}else{
+					return apiResponse.unauthorized({}, "Token is expired.");
+				}              
+			  });
+	
+		}catch(erro){
+		  console.log('erro==>>', erro)
+		}
+		}
 };

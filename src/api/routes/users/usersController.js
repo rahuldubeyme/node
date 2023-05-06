@@ -1,10 +1,16 @@
-const { Users } = require('../../../../models');   
+const { Users } = require('../../../../models'); 
+
+const varifyToken =  require('../../helpers/utility'); 
 
 class usersController{
 
     async userPage(req, res) {  
 
-        res.render('users/list');   
+
+
+        console.log("reqq==>>", req.session, "token==>")
+
+      //  res.render('users/list');   
         
     };  
 
