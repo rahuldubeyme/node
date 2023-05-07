@@ -158,6 +158,44 @@ paths:
         '401':
           description: Unauthorized
 
+  /auth/change-password:
+    post:
+      tags:
+        - Authentication
+      summary: Change Password Api
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              required:
+                - current-password
+                - new-password
+                - confirm-password
+              properties:
+                current-password:
+                  type: string
+                  example: "Admin@123"
+                new-password:
+                  type: string
+                  example: "Admin@23"
+                confirm-password:
+                  type: string
+                  example: "Admin@23"
+      responses:
+        '200':
+          description: OK
+        '401':
+          description: Unauthorized
+  
+  /auth/log-out:
+    get:
+      tags:
+        - Authentication
+      summary: Logout current user
+      security:
+        - Token-Authentication: []
+  
   /users/profile:
     get:
       tags:

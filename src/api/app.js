@@ -30,7 +30,7 @@ mongoose.connect(MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true 
 		process.exit(1);
 	});
 
-var app = express();
+app.set('view engine', 'ejs');
 
 //don't show the log when it is test
 if(process.env.NODE_ENV !== "test") {
@@ -57,17 +57,23 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/", apiRouter);
 
 
-/* app.post('/auth/login', (req, res) => {
+app.post('/', (req, res) => {
 	console.log('API endpoint hit');
 	res.send('Response from API endpoint');
-  }); */
+  });
 
+// Set views folder
+app.set('views', path.join(__dirname, 'views'));
 
+app.all('/', function(req, res) {
+	res.render('home');
+});
 
 // throw 404 if URL not found
 app.all("*", function(req, res) {
-	res.redirect('/docs')
-	return res.send("Page not found");
+	//res.redirect('/docs')
+	//return res.send("Page not found");
+	return res.render("404");
 });
 
 app.use((err, req, res) => {
