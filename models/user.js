@@ -43,6 +43,9 @@ const UserSchema = mongoose.Schema({
     roleId  : {
         type : String
     },
+    iat : {
+      type : Number
+    },
     isDeleted : {
         type : Boolean,
         default : false

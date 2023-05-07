@@ -24,7 +24,7 @@ exports.notFound = function (res, msg) {
 	return res.status(404).json(data);
 };
 
-exports.validationError = function (res, msg, data) {
+exports.validation = function (res, msg, data) {
 	var resData = {
 		status: 0,
 		message: msg,

@@ -67,9 +67,7 @@ class authController{
     async register(req , res){
 		try {
 			let params = req.body || {} && req.params || {} && req.query || {};
-			const body = Object.assign({}, params);
-
-			
+			const body = Object.assign({}, params);	
 
 			let x = await Users.findOne({ email : body.email, isEmailVarify : true, isDeleted : false })
 
@@ -134,7 +132,7 @@ class authController{
 		}    
     }
 
-    async verifyConfirm(req, res) {  
+    async verifyOtp(req, res) {  
         try {
 
 			let params = req.body || {} && req.params || {} && req.query || {};
@@ -199,6 +197,44 @@ class authController{
 				let otp = utility.generateOTP(4);
 				let tempMobile = TempMobile();
 					tempMobile.mobileNumber = body.mobile,
+					tempMobile.verificationCode = otp,
+					tempMobile.validTillAt = fiveMinutesLater.valueOf()
+					await tempMobile.save();
+
+					const token = utility.signInTempToken(user)
+
+					let userJSON = {
+						mobile : user.mobile,
+						token : token,
+						otp : otp
+					}
+	
+					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
+
+			}
+		} catch (err) {
+			return apiResponse.Error(res, err);
+		}  
+    }; 
+
+	async forgetPassword(req, res) {  
+        try {
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+			let user = await Users.findOne({ email : body.email, mobile : body.email, isDeleted : false })
+			let user1 = await Users.find({ })
+			console.log('params==>>', user1)
+				//return 0;
+
+			if(!user){
+				return apiResponse.success(res,"User not exist", {});
+			}else{
+				
+
+				let otp = utility.generateOTP(4);
+				let tempMobile = TempMobile();
+					tempMobile.mobileNumber = user.mobile,
 					tempMobile.verificationCode = otp,
 					tempMobile.validTillAt = fiveMinutesLater.valueOf()
 					await tempMobile.save();

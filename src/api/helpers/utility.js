@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 var apiResponse = require("../helpers/apiResponse");
 const { Users, TempMobile } = require('../../../models'); 
+const { ObjectId } = require('mongodb');
 
 
 module.exports = {
@@ -59,10 +60,16 @@ module.exports = {
 				}
 	
 				if(decoded != undefined) {
+					console.log("==>>", decoded)
 				  Users.findOne({
-					_id : decoded._id,
-					iat : decoded.iat
+					_id : ObjectId(decoded._id),
+					"isDeleted": false,
+					//iat : decoded.iat // not saved
 				  }).then(user => {
+					console.log("user.isSuspended=>>",user)
+					if(!user){
+						return apiResponse.notFound({}, "User is exist.");
+					}
 					if(user.isSuspended){
 						return apiResponse.unauthorized({}, "User is suspended.");
 					}
