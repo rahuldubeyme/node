@@ -1,5 +1,5 @@
 try{
-
+const session = require('express-session');
 var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
@@ -81,6 +81,23 @@ app.use((err, req, res) => {
 		return apiResponse.unauthorizedResponse(res, err.message);
 	}
 });
+
+/* store data in session */
+app.use(session({
+	secret: 'secreteSession',
+	resave: false,
+	saveUninitialized: true,
+	cookie: { secure: true } // set this to false if you are not using https
+  }));
+
+  app.use((req,res,next) => {
+    res.user = req.session.user || {};
+    req.token = req.session.token || {};  
+
+    next();
+  });
+
+
 
 /* port listening for api */
 const port = process.env.APIPORT;

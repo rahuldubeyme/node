@@ -98,10 +98,7 @@ class authController{
 					
 					//here is js not working
 
-					let otp = utility.generateOTP(4);
-
-					console.log('body1=2=>>', body, "user=>", utility.generateOTP(4));
-					
+					let otp = utility.generateOTP(4);		
 					
 					let tempMobile = TempMobile();
 					tempMobile.mobileNumber = body.mobile,

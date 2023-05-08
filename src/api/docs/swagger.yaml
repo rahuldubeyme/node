@@ -195,15 +195,21 @@ paths:
       summary: Logout current user
       security:
         - Token-Authentication: []
+      responses:
+        '200':
+          description: OK
   
   /users/profile:
     get:
       tags:
         - Users
-      summary: Retrieves the current user's profile
+      summary: Retrieves user data
       security:
         - Token-Authentication: []
-  
+      responses:
+        '200':
+          description: OK
+
   /users/update-profile:
     post:
       tags:

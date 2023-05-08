@@ -1,5 +1,5 @@
 
-exports.success = function (res, msg, data) {
+function success(res, msg, data) {
 	var resData = {
 		status: 1,
 		message: msg,
@@ -8,7 +8,7 @@ exports.success = function (res, msg, data) {
 	return res.status(200).json(resData);
 };
 
-exports.Error = function (res, msg) {
+function Error(res, msg) {
 	var data = {
 		status: 0,
 		message: msg,
@@ -16,7 +16,7 @@ exports.Error = function (res, msg) {
 	return res.status(500).json(data);
 };
 
-exports.notFound = function (res, msg) {
+function notFound(res, msg) {
 	var data = {
 		status: 0,
 		message: msg,
@@ -24,7 +24,7 @@ exports.notFound = function (res, msg) {
 	return res.status(404).json(data);
 };
 
-exports.validation = function (res, msg, data) {
+function validation(res, msg, data) {
 	var resData = {
 		status: 0,
 		message: msg,
@@ -33,10 +33,18 @@ exports.validation = function (res, msg, data) {
 	return res.status(400).json(resData);
 };
 
-exports.unauthorized = function (res, msg) {
+function unauthorized(res, msg) {
 	var data = {
 		status: 0,
 		message: msg,
 	};
 	return res.status(401).json(data);
 };
+
+module.exports = {
+	success,
+	Error,
+	notFound,
+	validation,
+	unauthorized
+  };
