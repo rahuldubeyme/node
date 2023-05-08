@@ -14,11 +14,10 @@ const {
 //   res.send('Hello, World!');
 // });
 
-router.get('/profile', verifyToken, userController.userPage); 
+router.get('/profile', verifyToken, userController.getProfile); 
 
-router.post('/update-profile', verifyToken, userController.userPage); 
+router.post('/update-profile', verifyToken, userController.updateProfile); 
 
-router.get('/log-out', verifyToken, userController.logout); 
 
 
 

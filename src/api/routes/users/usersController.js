@@ -4,7 +4,7 @@ const { ObjectId } = require('mongodb');
 
 class usersController{
  
-    async userPage(req, res) {  
+    async getProfile(req, res) {  
         try {
             const { user } = res.user;
             let params = req.body || {} && req.params || {} && req.query || {};
@@ -33,21 +33,34 @@ class usersController{
 		}  
     }; 
 
-
-    async logout(req, res) {  
+    async updateProfile(req, res) {  
         try {
-            res.session = null;
-            res.user = null;
+            const { user } = res.user;
+            let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+            const userData = res.session;
+            console.log("res.user ==>",res.user._id, "11==>>",  user)
+			
 
-            console.log('res.user', res.user)
+			let users = await Users.findOne({ _id : res.user._id, isDeleted : false })
 
-			return apiResponse.success(res,"Logged out", {});
+            console.log('users==>', users);
+
+			if(!users){
+				return apiResponse.warn(res,"User not exist", {});
+			}else{
+					let userJSON = {
+						users : users
+					}
+	
+					
+                    return apiResponse.success(res,"User get profile.", users);
+			}
             
 		} catch (err) {
 			return Error(res, err);
 		}  
-    };   
-
+    }; 
 
 }
 

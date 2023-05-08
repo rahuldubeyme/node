@@ -252,6 +252,19 @@ class authController{
 		}  
     }; 
 
+	async logout(req, res) {  
+        try {
+            res.session = null;
+            res.user = null;
+
+            console.log('res.user', res.user)
+
+			return apiResponse.success(res,"Logged out", {});
+            
+		} catch (err) {
+			return Error(res, err);
+		}  
+    }; 
 
 }
 
