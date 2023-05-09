@@ -35,13 +35,18 @@ app.use(expressSession({
 }));
 app.use(express.json());
 
+
+
+
 // Set views folder
+//app.set('views', __dirname + '/views');
 app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'ejs');
 // Set static folder
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, '/public')));
 
-
-
+console.log("check views path==>>",__dirname + '/views' )
+console.log("check static path==>>",path.join(__dirname, '/public') )
 console.log('check dir==>', __dirname)
 
 // Routes
@@ -72,13 +77,10 @@ app.use((req,res,next) => {
     res.locals.success = req.flash('success');
     res.locals.error = req.flash('error');
     res.locals.user = req.session.user || {};
-    req.session.user = req.session.user || {};
-    req.session.token = req.session.token || {};
     res.locals.token = req.session.token || {};
     res.locals.SITE_URL = dotenv.parsed.SITEURL;
     SITEURLS = `http://${hostname}:${port}/`
     
-
     next();
   });
 

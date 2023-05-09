@@ -23,7 +23,7 @@ class authController{
         
         try{
             console.log('=> loginPage111111111'); 
-            req.flash('error', 'Your action was successful.');
+            //req.flash('error', 'Your action was successful.');
            return res.render('login')
         }catch(err){
             console.log('=> 11',err);  

@@ -1,40 +1,52 @@
 const jwt = require('jsonwebtoken');
+const { ObjectId } = require('mongoose').Types;
 const { Users } = require('../../../models'); 
 
 
-class varifyClass{
-  async varifyToken(req, res, next){
-    try{
-      const { user } = req;
 
-      console.log('token==>',req.session.token)
-        
-          jwt.verify(req.session.token, "secret-key", (err, decoded) => {
-      
-          console.log('token1==>',decoded, "err=>, err", err)
 
-            if(!decoded || !decoded == null) {
-              return res.redirect('/auth/login');
-            }
-
-            if(decoded != undefined) {
-              let userData = Users.findOne({
-                iat : decoded.iat
-              })
-
-              console.log('verified user==>>', decoded._id)
-              res.user = decoded;
-              res.session.user = decoded;
-              next();
-            }else{
-              return res.redirect('/auth/login');
-            }              
-          });
-
-    }catch(erro){
-      console.log('erro==>>', erro)
-    }
-    }
+async function verifyToken(req, res, next) {
+  try {
+   
+    let token = req.session.token != undefined ? req.session.token : 'abc';
+    console.log('token==>', token)
+    const decoded = await jwt.verify(token, "secret-key", (err, decoded) => {
+    
+    	if (!decoded || decoded == null) {
+        return res.redirect('/auth/login');
+      }
+    if (decoded != undefined) {
+      const user = Users.findOne({
+       // _id : ObjectId(decoded._id),
+        iat : decoded.iat,
+        //"isDeleted": false
+      });
+      res.user = user;
+      res.session.user = user;
+	    next();
+      console.log("=decd00=>>", user, decoded);
+      if(!user) {
+        return res.redirect('/auth/login');
+      }
+      if(user.isSuspended) {
+        return res.redirect('/auth/login');
+      }
+      if(user.isDeleted) {
+        return res.redirect('/auth/login');
+      }
+    }    
+    else {
+    return res.redirect('/');
+  }
+    });
+   
+  } catch(err) {
+    console.log('erro==>>', err);
+  }
 }
 
-module.exports = new varifyClass() ;
+
+// Export the functions
+module.exports = {
+  verifyToken
+};

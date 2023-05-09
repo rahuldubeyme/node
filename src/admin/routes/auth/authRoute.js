@@ -4,14 +4,8 @@ const AuthController =  require('./authController');
 const varifyToken =  require('../../utils/auth'); 
 
 
-//router.get('/', token, AuthController.dashboard); 
 
-router.get('login', function(req, res) {
-    res.send('Hello World 2!');
-    return;
-  });
-
-//router.get('/login',  AuthController.loginPage); 
+router.get('/login',  AuthController.loginPage); 
 
 router.post('/login',  AuthController.login); 
 

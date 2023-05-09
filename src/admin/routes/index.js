@@ -1,15 +1,11 @@
 var express = require('express');
 var router = express.Router(); 
 const AuthController =  require('./auth/authController'); 
-const verifyToken =  require('../utils/auth'); 
-const token = verifyToken.varifyToken;
+const { verifyToken } =  require('../utils/auth')
 
 
-
-const fs = require("fs");  
-
-const path = require('path');
 var app = express();
+const fs = require("fs");  
 
 let route = fs.readdirSync(__dirname);
 
@@ -27,20 +23,20 @@ console.log('check use route==>'  )
 //   return;
 // });
 
-// router.get('/auth/auth-login', 
-// // function(req, res) {
-// //     res.send('Hello World!');
-// //     //return;
-// //   },
-//   AuthController.loginPage
-//   );
+router.get('/auth/login', 
+function(req, res) {
+    res.send('Hello World!');
+    //return;
+  },
+  //AuthController.loginPage
+  );
 
 
 // router.post('/auth/auth-login', 
 //     AuthController.login
 //     );
 
-router.get('/',token, AuthController.dashboard); 
+router.get('/',verifyToken, AuthController.dashboard); 
 
 router.get('/', 
 function(req, res) {
@@ -51,19 +47,19 @@ function(req, res) {
   );
 
 
-router.get('/profile',token,  AuthController.profilePage); 
+router.get('/profile',verifyToken,  AuthController.profilePage); 
 
-router.post('/profle', token, AuthController.profile); 
+router.post('/profle', verifyToken, AuthController.profile); 
 
-router.get('/changepassword',token,  AuthController.changePasswordPage); 
+router.get('/changepassword',verifyToken,  AuthController.changePasswordPage); 
 
-router.post('/changepassword', token, AuthController.changePassword); 
+router.post('/changepassword', verifyToken, AuthController.changePassword); 
 
-router.get('/settings', token, AuthController.settingPage); 
+router.get('/settings', verifyToken, AuthController.settingPage); 
 
-router.post('/settings', token, AuthController.setting); 
+router.post('/settings', verifyToken, AuthController.setting); 
 
-router.get('/logout', token, AuthController.logout); 
+router.get('/logout', verifyToken, AuthController.logout); 
 
 
-module.exports = router;
+module.exports = app;
