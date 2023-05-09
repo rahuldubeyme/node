@@ -184,7 +184,7 @@ class authController{
         try {
 			let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
-			console.log('params==>>', body)
+			console.log('params 3==>>', body)
 
 			let user = await Users.findOne({ mobile : body.mobile, isDeleted : false })
 
@@ -221,7 +221,7 @@ class authController{
 
 			let user = await Users.findOne({ email : body.email, mobile : body.email, isDeleted : false })
 			let user1 = await Users.find({ })
-			console.log('params==>>', user1)
+			console.log('params= 4=>>', user1)
 				//return 0;
 
 			if(!user){
@@ -247,6 +247,32 @@ class authController{
 					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
 
 			}
+		} catch (err) {
+			return apiResponse.Error(res, err);
+		}  
+    }; 
+
+	async changePassword(req, res) {  
+        try {
+			let params = req.body || {} && req.params || {} && req.query || {};
+			const body = Object.assign({}, params);
+
+			let user = await Users.findOne({ _id : res.user._id, isDeleted : false })
+			
+			if (!user) {
+				return apiResponse.success(res,"user not found", {});
+			}
+			const isMatch = await bcrypt.compare(body.currentPassword, user.password);
+			if (!isMatch) {
+				return apiResponse.success(res,"Invalid password", {});
+			}else{
+				const hashedPassword = await bcrypt.hash(body.newPassword);
+				user.password = hashedPassword;
+				await user.save();
+
+				return apiResponse.success(res,"Password changed successfully", {});
+			}
+
 		} catch (err) {
 			return apiResponse.Error(res, err);
 		}  

@@ -163,23 +163,25 @@ paths:
       tags:
         - Authentication
       summary: Change Password Api
+      security:
+        - Token-Authentication: []
       requestBody:
         content:
           application/x-www-form-urlencoded:
             schema:
               type: object
               required:
-                - current-password
-                - new-password
-                - confirm-password
+                - currentPassword
+                - newPassword
+                - confirmPassword
               properties:
-                current-password:
+                currentPassword:
                   type: string
                   example: "Admin@123"
-                new-password:
+                newPassword:
                   type: string
                   example: "Admin@23"
-                confirm-password:
+                confirmPassword:
                   type: string
                   example: "Admin@23"
       responses:

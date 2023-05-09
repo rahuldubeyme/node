@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 var express = require('express'); 
+let engine = require('ejs-locals')
 var app = express();
 const flash = require('connect-flash');
 var path = require('path'); 
@@ -9,6 +10,8 @@ const bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var expressSession = require('express-session');
 const ejs = require('ejs');
+// use ejs-locals for all ejs templates:
+app.engine('ejs', engine);
 
 mongoose.connect(process.env.MONGODB_URL, {
   useNewUrlParser: true
