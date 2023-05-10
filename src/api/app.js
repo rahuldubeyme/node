@@ -5,7 +5,13 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 require("dotenv").config();
-var apiResponse = require("./helpers/apiResponse");
+var {
+	success,
+	error,
+	notFound,
+	validation,
+	unauthorized
+} = require("./helpers/apiResponse");
 var cors = require("cors");
 var apiRouter = require("./routes");
 var app = express();
@@ -78,7 +84,7 @@ app.all("*", function(req, res) {
 
 app.use((err, req, res) => {
 	if(err.name == "UnauthorizedError"){
-		return apiResponse.unauthorizedResponse(res, err.message);
+		return unauthorized(res, err.message);
 	}
 });
 
