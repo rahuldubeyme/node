@@ -8,7 +8,7 @@ function success(res, msg, data) {
 	return res.status(200).json(resData);
 };
 
-function Error(res, msg) {
+function error(res, msg) {
 	var data = {
 		status: 0,
 		message: msg,
@@ -43,7 +43,7 @@ function unauthorized(res, msg) {
 
 module.exports = {
 	success,
-	Error,
+	error,
 	notFound,
 	validation,
 	unauthorized

@@ -2,10 +2,22 @@ const { Users, TempMobile } = require('../../../../models');
 const jwt = require("jsonwebtoken");  
 const request = require('request');
 const bcrypt = require("bcryptjs")
-var apiResponse = require("../../helpers/apiResponse");
+var {
+	success,
+	error,
+	notFound,
+	validation,
+	unauthorized
+} = require("../../helpers/apiResponse");
 const { ObjectId } = require('mongodb');
 
-const utility = require('../../helpers/utility');
+const { randomNumber,
+	generateOTP,
+	signInTempToken,
+	verifyTempToken,
+	signInToken,
+	verifyToken
+ } = require('../../helpers/utility');
 const now = new Date();
 const fiveMinutesLater = new Date(now.getTime() + (50 * 60 * 1000));
 
@@ -43,24 +55,24 @@ class authController{
 									const secret = process.env.JWT_SECRET;
 									//Generated JWT token with Payload and secret.
 									userData.token = jwt.sign(jwtPayload, secret, jwtData);
-									return apiResponse.success(res,"Login Success.", userData);
+									return success(res,"Login Success.", userData);
 								}else {
-									return apiResponse.unauthorized(res, "Account is not active. Please contact admin.");
+									return unauthorized(res, "Account is not active. Please contact admin.");
 								}
 							}else{
-								return apiResponse.unauthorized(res, "Account is not confirmed. Please confirm your account.");
+								return unauthorized(res, "Account is not confirmed. Please confirm your account.");
 							}
 						}else{
-							return apiResponse.unauthorized(res, "Email or Password wrong.");
+							return unauthorized(res, "Email or Password wrong.");
 						}
 					});
 				}else{
-					return apiResponse.unauthorized(res, "Email or Password wrong.");
+					return unauthorized(res, "Email or Password wrong.");
 				}
 			});
 		} catch (err) {
 			console.log("error==>", err)
-			return apiResponse.Error(res, err);
+			return error(res, err);
 		}
     }; 
 
@@ -75,10 +87,10 @@ class authController{
 			
 
 			if(x){
-				return apiResponse.warn(res,"Email already exist.", {});
+				return warn(res,"Email already exist.", {});
 			}else
 			if(y){
-				return apiResponse.warn(res,"Mobile number already exist.", {});
+				return warn(res,"Mobile number already exist.", {});
 			}else {
 				
 				let user = Users()
@@ -109,7 +121,7 @@ class authController{
 					/* sign token */
 
 					console.log("payload==>>",user )
-					const token = utility.signInTempToken(user)
+					const token = await signInTempToken(user)
 					console.log("payload==>>",token )
 
 					//return res.send()
@@ -120,12 +132,12 @@ class authController{
 						otp : otp
 					}
 	
-					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
+					return success(res,"Otp sent on your registred mobile", userJSON);
 			}
 
 		} catch (err) {
 			//throw error in json response with status 500.
-			return apiResponse.Error(res, err);
+			return error(res, err);
 		}    
     }
 
@@ -134,18 +146,21 @@ class authController{
 
 			let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
-
+			
 			let x = await TempMobile.findOne({ mobileNumber : body.mobile , verificationCode : body.otp })
-
+			
 			if(x.validTillAt < now.valueOf() || !x){
 					//otp expire
-					return apiResponse.success(res,"Otp is Expired", {});
+					return success(res,"Otp is Expired", {});
 			}else{
-				const decoded = utility.varifyTempToken(body.token);
+
+				console.log('decoded 1=>',x, "===========>>", x.validTillAt < now.valueOf());
+
+				const decoded = await verifyTempToken(body.token);
 					// If the token is valid, the decoded object will contain the payload data
-					
+				console.log('decoded 2=>',decoded);
 				if(!decoded){
-					return apiResponse.success(res,"Token is Expired", {});
+					return  success(res,"Token is Expired", {});
 				}
 
 				console.log('perm-token decoded 1==>>', decoded);
@@ -163,7 +178,7 @@ class authController{
 				 console.log('perm-token decoded 2==>>', decoded);
 
 				 /* set perm token */
-				 const token = utility.signInToken(user)
+				 const token = await signInToken(user)
 
 				 console.log('perm-token==>>', token);
 
@@ -171,7 +186,7 @@ class authController{
 					token : token
 				}
 
-				return apiResponse.success(res,"Registration successfully completed", userJSON);
+				return  success(res,"Registration successfully completed", userJSON);
 				
 			}
 			
@@ -189,16 +204,16 @@ class authController{
 			let user = await Users.findOne({ mobile : body.mobile, isDeleted : false })
 
 			if(!user){
-				return apiResponse.success(res,"Mobile number is not exist", {});
+				return  success(res,"Mobile number is not exist", {});
 			}else{
-				let otp = utility.generateOTP(4);
-				let tempMobile = TempMobile();
+				let otp = await generateOTP(4);
+				let tempMobile =new TempMobile();
 					tempMobile.mobileNumber = body.mobile,
 					tempMobile.verificationCode = otp,
 					tempMobile.validTillAt = fiveMinutesLater.valueOf()
 					await tempMobile.save();
 
-					const token = utility.signInTempToken(user)
+					const token = await signInTempToken(user)
 
 					let userJSON = {
 						mobile : user.mobile,
@@ -206,11 +221,11 @@ class authController{
 						otp : otp
 					}
 	
-					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
+					return  success(res,"Otp sent on your registred mobile", userJSON);
 
 			}
 		} catch (err) {
-			return apiResponse.Error(res, err);
+			return  Error(res, err);
 		}  
     }; 
 
@@ -219,24 +234,31 @@ class authController{
 			let params = req.body || {} && req.params || {} && req.query || {};
 			const body = Object.assign({}, params);
 
-			let user = await Users.findOne({ email : body.email, mobile : body.email, isDeleted : false })
-			let user1 = await Users.find({ })
-			console.log('params= 4=>>', user1)
-				//return 0;
+			let user = await Users.findOne({ 
+				$or : [
+					{
+						email : body.email,
+					},
+					{
+						mobile : body.email
+					}
+				],
+				isDeleted : false
+			 })
 
 			if(!user){
-				return apiResponse.success(res,"User not exist", {});
+				return  success(res,"User not exist", {});
 			}else{
 				
 
-				let otp = utility.generateOTP(4);
-				let tempMobile = TempMobile();
+				let otp = await generateOTP(4);
+				let tempMobile =new TempMobile();
 					tempMobile.mobileNumber = user.mobile,
 					tempMobile.verificationCode = otp,
 					tempMobile.validTillAt = fiveMinutesLater.valueOf()
 					await tempMobile.save();
 
-					const token = utility.signInTempToken(user)
+					const token = await signInTempToken(user)
 
 					let userJSON = {
 						mobile : user.mobile,
@@ -244,11 +266,11 @@ class authController{
 						otp : otp
 					}
 	
-					return apiResponse.success(res,"Otp sent on your registred mobile", userJSON);
+					return  success(res,"Otp sent on your registred mobile", userJSON);
 
 			}
 		} catch (err) {
-			return apiResponse.Error(res, err);
+			return  Error(res, err);
 		}  
     }; 
 
@@ -260,21 +282,21 @@ class authController{
 			let user = await Users.findOne({ _id : res.user._id, isDeleted : false })
 			
 			if (!user) {
-				return apiResponse.success(res,"user not found", {});
+				return  success(res,"user not found", {});
 			}
 			const isMatch = await bcrypt.compare(body.currentPassword, user.password);
 			if (!isMatch) {
-				return apiResponse.success(res,"Invalid password", {});
+				return  success(res,"Invalid password", {});
 			}else{
 				const hashedPassword = await bcrypt.hash(body.newPassword);
 				user.password = hashedPassword;
 				await user.save();
 
-				return apiResponse.success(res,"Password changed successfully", {});
+				return  success(res,"Password changed successfully", {});
 			}
 
 		} catch (err) {
-			return apiResponse.Error(res, err);
+			return  Error(res, err);
 		}  
     }; 
 
@@ -285,7 +307,7 @@ class authController{
 
             console.log('res.user', res.user)
 
-			return apiResponse.success(res,"Logged out", {});
+			return  success(res,"Logged out", {});
             
 		} catch (err) {
 			return Error(res, err);

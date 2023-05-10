@@ -2,7 +2,13 @@
 
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongoose').Types;
-const apiResponse = require('../helpers/apiResponse');
+const {
+  success,
+	error,
+	notFound,
+	validation,
+	unauthorized
+} = require('../helpers/apiResponse');
 const { Users, TempMobile } = require('../../../models');
 
 function randomNumber(length) {
@@ -53,7 +59,7 @@ async function verifyToken(req, res, next) {
     const token = authorizationHeader.split(' ')[1];
     const decoded = await jwt.verify(token, process.env.JWT_SECRET);
     if (!decoded || decoded == null) {
-      return apiResponse.unauthorized({}, "Token is expired.");
+      return unauthorized({}, "Token is expired.");
     }
     if (decoded != undefined) {
      
@@ -62,20 +68,20 @@ async function verifyToken(req, res, next) {
         "isDeleted": false,
         //iat : decoded.iat // not saved
       });
-	  res.user = user;
+	    res.user = user;
       res.session = user;
       if(!user) {
-        return apiResponse.notFound({}, "User does not exist.");
+        return notFound({}, "User does not exist.", {});
       }
       if(user.isSuspended) {
-        return apiResponse.unauthorized({}, "User is suspended.");
+        return unauthorized({}, "User is suspended.");
       }
       if(user.isDeleted) {
-        return apiResponse.unauthorized({}, "User is deleted.");
+        return unauthorized({}, "User is deleted.");
       }
 	  next();
     } else {
-      return apiResponse.unauthorized({}, "Token is expired.");
+      return unauthorized({}, "Token is expired.");
     }
    
   } catch(err) {
