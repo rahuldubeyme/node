@@ -16,20 +16,29 @@ route.forEach((file) => {
 });
 
 
-console.log('check use route==>'  )
+console.log('check use route 1==>'  )
+
+//router.get('/', 
+// function(req, res) {
+//     res.send('Hello World home!');
+//     return;
+//   },
+//   //AuthController.loginPage
+//   );
+
 
 // router.get('/auth/login', function(req, res) {
 //   res.send('Hello World 2!');
 //   return;
 // });
 
-router.get('/auth/login', 
-function(req, res) {
-    res.send('Hello World!');
-    //return;
-  },
-  //AuthController.loginPage
-  );
+// router.get('/auth/login', 
+// function(req, res) {
+//     res.send('Hello World!');
+//     //return;
+//   },
+//   //AuthController.loginPage
+//   );
 
 
 // router.post('/auth/auth-login', 
@@ -37,15 +46,6 @@ function(req, res) {
 //     );
 
 router.get('/',verifyToken, AuthController.dashboard); 
-
-router.get('/', 
-function(req, res) {
-    res.send('Hello World home!');
-    return;
-  },
-  //AuthController.loginPage
-  );
-
 
 router.get('/profile',verifyToken,  AuthController.profilePage); 
 
@@ -62,4 +62,4 @@ router.post('/settings', verifyToken, AuthController.setting);
 router.get('/logout', verifyToken, AuthController.logout); 
 
 
-module.exports = app;
+module.exports = router;

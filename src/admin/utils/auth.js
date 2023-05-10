@@ -13,7 +13,7 @@ async function verifyToken(req, res, next) {
     const decoded = await jwt.verify(token, "secret-key", (err, decoded) => {
     
     	if (!decoded || decoded == null) {
-        return res.redirect('/auth/login');
+        res.redirect('/auth/login');
       }
     if (decoded != undefined) {
       const user = Users.findOne({
@@ -26,20 +26,20 @@ async function verifyToken(req, res, next) {
 	    next();
       console.log("=decd00=>>", user, decoded);
       if(!user) {
-        return res.redirect('/auth/login');
+        res.redirect('/auth/login');
       }
       if(user.isSuspended) {
-        return res.redirect('/auth/login');
+        res.redirect('/auth/login');
       }
       if(user.isDeleted) {
-        return res.redirect('/auth/login');
+        res.redirect('/auth/login');
       }
     }    
     else {
-    return res.redirect('/');
+      res.redirect('/auth/login');
   }
     });
-   
+    res.redirect('/auth/login');
   } catch(err) {
     console.log('erro==>>', err);
   }
