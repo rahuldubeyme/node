@@ -21,19 +21,22 @@ async function verifyToken(req, res, next) {
         iat : decoded.iat,
         //"isDeleted": false
       });
-      res.user = user;
-      res.session.user = user;
-	    next();
-      console.log("=decd00=>>", user, decoded);
+     
+     // console.log("=decd00=>>", user, decoded);
       if(!user) {
         res.redirect('/auth/login');
       }
       if(user.isSuspended) {
+        console.log("=isSuspended=>>", user.isSuspended);
         res.redirect('/auth/login');
       }
       if(user.isDeleted) {
+        console.log("=isDeleted=>>", user.isDeleted);
         res.redirect('/auth/login');
       }
+      res.user = user;
+      req.session.user = user;
+	    next();
     }    
     else {
       res.redirect('/auth/login');

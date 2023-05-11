@@ -1,77 +1,56 @@
 <!doctype html>
 <html lang="en">
-    <%- include('./layout/header'); %>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Dashboard </title>
+    <link href="<%= nodeAdminUrl %>/public/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<%= nodeAdminUrl %>/public/css/master.css" rel="stylesheet">
+
+    <link href="<%= nodeAdminUrl %>/public/css/dropzone.min.css" rel="stylesheet">
+    <link href="<%= nodeAdminUrl %>/public/css/jquery-ui.custom.min.css" rel="stylesheet">
+    <link href="<%= nodeAdminUrl %>/public/css/jquery-ui.min.css" rel="stylesheet">
+    <link href="<%= nodeAdminUrl %>/public/css/prettify.min.css" rel="stylesheet">
+    <!-- Latest compiled and minified CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
   <body>
-    <%- include('./layout/navbar'); %>
+    <section>
 
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-2">
-             <%- include('./layout/sidebar'); %> 
-        </div>
-        
-        <div class="col-10">
-            <div class="row px-2 py-4">
-                <div class="col-3">
-                 <div class="card">
-                     <div class="card-header text-center">
-                       Featured
-                     </div>
-                     <div class="card-body">
-                       <h5 class="card-title text-center">Special title treatment</h5>
-                       
-                       
-                     </div>
-                 </div>
-                </div>
+      <%-body -%>
 
-                <div class="col-3">
-                    <div class="card">
-                        <div class="card-header text-center">
-                          Featured
-                        </div>
-                        <div class="card-body">
-                          <h5 class="card-title text-center">Special title treatment</h5>
-                          
-                          
-                        </div>
-                    </div>
-                   </div>
+     
 
 
-                   <div class="col-3">
-                    <div class="card">
-                        <div class="card-header text-center">
-                          Featured
-                        </div>
-                        <div class="card-body">
-                          <h5 class="card-title text-center">Special title treatment</h5>
-                          
-                          
-                        </div>
-                    </div>
-                   </div>
+    </section>
+</body>
+
+<div class="fixed-bottom">
+  <footer class="">   
+      <p class="text-center text-muted">© 2021 Company, Inc</p>
+    </footer>
+</div>
+<script src="<%= nodeAdminUrl %>/public/js/bootstrap.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery.dataTables.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/moment.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/wizard.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/tree.min.js"></script>
+
+<script src="<%= nodeAdminUrl %>/public/js/spinbox.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/spin.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/prettify.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery.easypiechart.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery.dataTables.min.js"></script>
+
+<script src="<%= nodeAdminUrl %>/public/js/spinbox.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/spin.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/prettify.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery-ui.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery-ui.custom.min.js"></script>
+
+<script src="<%= nodeAdminUrl %>/public/js/jquery-2.1.4.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery-1.11.3.min.js"></script>
+<script src="<%= nodeAdminUrl %>/public/js/jquery-ui.min.js"></script>
 
 
-
-                   <div class="col-3">
-                    <div class="card">
-                        <div class="card-header text-center">
-                          Featured
-                        </div>
-                        <div class="card-body">
-                          <h5 class="card-title text-center">Special title treatment</h5>
-                          
-                          
-                        </div>
-                    </div>
-                   </div>
-
-                
-             </div>  
-        </div>
-       
-      </div>
-    </div>
-    <%- include('./layout/footer'); %>
-</body></html>
+</html>

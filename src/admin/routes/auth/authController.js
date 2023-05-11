@@ -6,14 +6,14 @@ class authController{
 
     async dashboard(req, res) {  
         try{  
-            console.log('==========dash', req.session.user); 
+           // console.log('==========dash', req.session.user); 
             req.flash('success', 'Your action was successful.');
             const success = req.flash('success');
             const error = req.flash('error');
             let user = req.session.user;
             let alert = req.session.alert = 'You have been logged in.';
             
-            return res.render('index',{error, success, user, alert})
+            return res.render('dashboard',{error, success, user, alert})
         }catch(err){
 
         } 
@@ -67,7 +67,7 @@ class authController{
                         (err, token) => {
                           if (err) throw err;
 
-                          console.log('jwt token after login==>', token)
+                          console.log('jwt token after login==>', userData._id)
 
                           req.session.user = userData;
 
@@ -76,10 +76,6 @@ class authController{
                           return res.redirect('/');
                         }
                       );
-                    //callback({success: true})
-                    // req.session.user = userData;
-                    // console.log('userData=>>',userData);
-                    // return res.redirect('/')
                 }
                 })
             }
