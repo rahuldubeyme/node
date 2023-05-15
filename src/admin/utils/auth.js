@@ -1,52 +1,53 @@
 const jwt = require('jsonwebtoken');
 const { ObjectId } = require('mongoose').Types;
-const { Users } = require('../../../models'); 
+const { Admin } = require('../../../models'); 
 
 
 
 
 async function verifyToken(req, res, next) {
   try {
-   
-    let token = req.session.token != undefined ? req.session.token : 'abc';
-    console.log('token==>', token)
-    const decoded = await jwt.verify(token, "secret-key", (err, decoded) => {
-    
-    	if (!decoded || decoded == null) {
-        res.redirect('/auth/login');
-      }
-    if (decoded != undefined) {
-      const user = Users.findOne({
-       // _id : ObjectId(decoded._id),
-        iat : decoded.iat,
-        //"isDeleted": false
-      });
-     
-     // console.log("=decd00=>>", user, decoded);
-      if(!user) {
-        res.redirect('/auth/login');
-      }
-      if(user.isSuspended) {
-        console.log("=isSuspended=>>", user.isSuspended);
-        res.redirect('/auth/login');
-      }
-      if(user.isDeleted) {
-        console.log("=isDeleted=>>", user.isDeleted);
-        res.redirect('/auth/login');
-      }
-      res.user = user;
-      req.session.user = user;
-	    next();
-    }    
-    else {
-      res.redirect('/auth/login');
-  }
+    let token = req.session.token || 'abc';
+    console.log('token =>', token);
+
+    if (!token) {
+      return res.redirect('/auth/login');
+    }
+
+    const decoded = jwt.verify(token, "secret-key");
+
+    if (!decoded || decoded == null) {
+      return res.redirect('/auth/login');
+    }
+
+    const user = await Admin.findOne({
+      _id: ObjectId(decoded._id),
+      isDeleted: false
     });
-    res.redirect('/auth/login');
-  } catch(err) {
-    console.log('erro==>>', err);
+
+    if (!user) {
+      return res.redirect('/auth/login');
+    }
+
+    if (user.isSuspended) {
+      console.log("isSuspended =>", user.isSuspended);
+      return res.redirect('/auth/login');
+    }
+
+    if (user.isDeleted) {
+      console.log("isDeleted =>", user.isDeleted);
+      return res.redirect('/auth/login');
+    }
+
+    res.user = user;
+    req.session.user = user;
+    next();
+  } catch (err) {
+    console.log('error verify token =>', err);
+    return res.redirect('/auth/login');
   }
 }
+
 
 
 // Export the functions

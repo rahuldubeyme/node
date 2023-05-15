@@ -1,28 +1,22 @@
-const { Users } = require('../../../../models'); 
+const { Users, Admin } = require('../../../../models'); 
 const jwt = require("jsonwebtoken");  
 const request = require('request');
+const bcrypt = require("bcryptjs")
 
 class authController{
 
     async dashboard(req, res) {  
         try{  
-           // console.log('==========dash', req.session.user); 
-            req.flash('success', 'Your action was successful.');
-            const success = req.flash('success');
-            const error = req.flash('error');
-            let user = req.session.user;
-            let alert = req.session.alert = 'You have been logged in.';
+           console.log('==========dash', req.session.user._id); 
             
-            return res.render('dashboard',{error, success, user, alert})
+            return res.render('dashboard')
         }catch(err){
 
         } 
     };  
 
     async loginPage(req , res){
-        
         try{
-            console.log('=> loginPage111111111'); 
             //req.flash('error', 'Your action was successful.');
            return res.render('login')
         }catch(err){
@@ -30,64 +24,38 @@ class authController{
         }   
     }
 
-    async login(req, res) {          
-        try{
-        let { email , password } = req.body; 
-            console.log('=> 11login', req.body); 
-            //return 0;
+    async login(req, res) {
+        try {
+          const { email, password } = req.body;
+          console.log('req.body ==>', req.body);
+      
+          const userData = await Admin.findOne({ email: email });
+          if (!userData) {
+            console.log('Email does not exist ==>', userData);
+            return res.redirect('/auth/login');
+          }
+      
+          const passwordMatch = await bcrypt.compare(password, userData.password);
+          console.log('passwordMatch 1 ==>', passwordMatch);
+          if (!passwordMatch) {
+            console.log('Password does not match ==>', userData._id, 'passwordMatch 2 ==>', passwordMatch);
+            return res.redirect('/auth/login');
+          }
+      
+          const token = await jwt.sign(userData.toJSON(), 'secret-key', { expiresIn: 3600 });
 
-            let userData = await Users.findOne({email: email})
-            console.log('=> userData', userData); 
-            await Users.findOne({email: email}).exec(function(error, user) {
-            if (error) {
-                console.log('=> error1', error); 
-                callback({error: true})
-            } else if (!user) {
-                //callback({error: true})
-                console.log('==users==>>', user);
-                req.flash('success', 'enterd password is wrong!');
-                const success = req.flash('success');
-                const error = req.flash('error');
-                return res.render('login',{error, success})
-            } else {
-                user.comparePassword(password, function(matchError, isMatch) {
-                if (matchError) {
-                    console.log('=matchError==>>',matchError);
-                    res.warn('enterd password is wrong!')
-                    return res.render('login')
-                } else if (!isMatch) {
-                    console.log('=matchError==>>',isMatch);
-                } else {
-                    jwt.sign(
-                        userData.toJSON(),
-                        "secret-key",
-                        {
-                          expiresIn: 3600
-                        },
-                        (err, token) => {
-                          if (err) throw err;
+          console.log('verify token after login==>>', token)
 
-                          console.log('jwt token after login==>', userData._id)
-
-                          req.session.user = userData;
-
-                          req.session.token = token;
-
-                          return res.redirect('/');
-                        }
-                      );
-                }
-                })
-            }
-            })
-            /* let session=req.session;
-            session.user=userData;
-            console.log("===>>session ==>>",userData) */
-        }catch(err){
-
-        }   
-    }; 
-
+          req.session.user = userData.toJSON();
+          req.session.token = token;
+      
+          return res.redirect('/');
+        } catch (err) {
+          console.log('login err ==>', err);
+          return res.status(500).send('Internal Server Error');
+        }
+      }
+      
 
     async profilePage(req , res){
         console.log('=> profile route');  

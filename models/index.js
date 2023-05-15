@@ -1,4 +1,5 @@
 class models{
+     Admin = require('./admin');
      Users = require('./user');
      TempMobile = require('./tempMobile');
      Vandors = require('./vandor');
