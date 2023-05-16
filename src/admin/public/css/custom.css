@@ -51,7 +51,7 @@ body {
 }
 
 .metismenu {
-  padding: 20px;
+  padding: 20px 0px;
 }
 
 .metismenu li {
@@ -119,7 +119,7 @@ a:link { text-decoration: none; }
 #sidebar-menu > ul > li > a {
   color: #6e768e;
   display: block;
-  padding: 13px 20px;
+  padding: 13px 6px;
   position: relative;
   -webkit-transition: all 0.4s;
   transition: all 0.4s;
@@ -130,8 +130,9 @@ a:link { text-decoration: none; }
 #sidebar-menu > ul > li > a:active,
 #sidebar-menu > ul > li > a:focus,
 #sidebar-menu > ul > li > a:hover {
-  color: #00acc1;
+  color: #fcffff;
   text-decoration: none;
+  background-color: #0861ba!important;
 }
 
 #sidebar-menu > ul > li > a > span {
@@ -205,6 +206,10 @@ a:link { text-decoration: none; }
   text-transform: uppercase;
   color: #6e768e;
   font-weight: 600;
+}
+
+#sidebar-menu {
+  background-color: #f8f9fa!important;
 }
 
 .enlarged .logo-box {
@@ -4706,7 +4711,13 @@ div.hopscotch-bubble .hopscotch-content {
 .responsive-table-plugin .btn-group.pull-right .dropdown-menu {
   left: auto;
   right: 0;
+  margin-right: 16px;
 }
+
+.dropdown-menu {
+  margin-right: 16px;
+}
+
 
 @font-face {
   font-family: footable;
@@ -5632,3 +5643,4 @@ table[data-toggle="table"] {
 .input-group {
   flex-wrap: unset;
 }
+
