@@ -1,10 +1,10 @@
 const express = require('express');
 const router = express.Router(); 
-const userController =  require('../users/usersController'); 
+const payoutsController =  require('./payoutsController'); 
 
-router.get('/',  userController.userPage); 
+router.get('/',  payoutsController.userPage); 
 
-router.get('/list',  userController.list);     
+router.get('/list',  payoutsController.list);     
 
 
 

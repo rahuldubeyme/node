@@ -1,21 +1,21 @@
 const { Users } = require('../../../../models');   
 
-class usersController{
+class categoryController{
 
     async userPage(req, res) {  
 
-        res.render('users/list');   
+        res.render('category/list');   
         
     };  
 
 
     async list(req, res) {  
 
-        res.render('users/list');   
+        res.render('category/list');   
         
     };  
 
 
 }
 
-module.exports = new usersController()
+module.exports = new categoryController()
