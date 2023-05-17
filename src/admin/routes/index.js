@@ -55,9 +55,9 @@ router.get('/changepassword',verifyToken,  AuthController.changePasswordPage);
 
 router.post('/changepassword', verifyToken, AuthController.changePassword); 
 
-router.get('/settings', verifyToken, AuthController.settingPage); 
+router.get('/setting', verifyToken, AuthController.settingPage); 
 
-router.post('/settings', verifyToken, AuthController.setting); 
+router.post('/setting', verifyToken, AuthController.setting); 
 
 router.get('/logout', verifyToken, AuthController.logout); 
 

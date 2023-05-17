@@ -1,39 +1,102 @@
 
-<%- include('./layout/header'); %>
+<% layout('index') -%>
+
 <div class="container rounded bg-white mt-5 mb-5">
     <div class="row">
-        
         <div class="col-md-4 border-right">
-            <div class="d-flex flex-column align-items-center text-center p-3 py-5"><img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg"><span class="font-weight-bold">Edogaru</span><span class="text-black-50">edogaru@mail.com.my</span><span> </span></div>
-        </div>
-        <div class="col-md-6 border-right">
-            <div class="p-3 py-5">
-                <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h4 class="text-right">Profile </h4>
-                </div>
-                <div class="row mt-2">
-                    <div class="col-md-6"><label class="labels">Name</label><input type="text" class="form-control" placeholder="first name" value=""></div>
-                    <div class="col-md-6"><label class="labels">Surname</label><input type="text" class="form-control" value="" placeholder="surname"></div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12"><label class="labels">Mobile Number</label><input type="text" class="form-control" placeholder="enter phone number" value=""></div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-12"><label class="labels">Email ID</label><input type="text" class="form-control" placeholder="enter email id" value=""></div>
-                </div>
-                <div class="row mt-3">
-                    <div class="col-md-6"><label class="labels">Country</label><input type="text" class="form-control" placeholder="country" value=""></div>
-                    <div class="col-md-6"><label class="labels">State/Region</label><input type="text" class="form-control" value="" placeholder="state"></div>
-                </div>
-                <div class="mt-4 text-right">
-                    <button class="btn btn-primary profile-button" type="button">Save Profile</button>
-                </div>
+            <div class="d-flex flex-column align-items-center text-center p-3 py-5">
+                <img class="rounded-circle mt-5" width="150px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                <span class="font-weight-bold">Edogaru</span>
+                <span class="text-black-50">edogaru@mail.com.my</span>
             </div>
         </div>
-        
+        <div class="col-md-6 border-right">
+            <form>
+                <div class="p-3 py-5">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4 class="text-right">Profile </h4>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <label class="labels">Name</label>
+                            <input type="text" class="form-control" placeholder="first name" name="firstName" value="">
+                            <span class="text-danger validation-error" id="firstName-error"></span>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="labels">Surname</label>
+                            <input type="text" class="form-control" value="" placeholder="surname" name="lastName">
+                            <span class="text-danger validation-error" id="lastName-error"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Mobile Number</label>
+                            <input type="text" class="form-control" placeholder="enter phone number" name="phoneNumber" value="">
+                            <span class="text-danger validation-error" id="phoneNumber-error"></span>
+                        </div>
+                    </div>
+                    <div class="row mt-3">
+                        <div class="col-md-12">
+                            <label class="labels">Email ID</label>
+                            <input type="text" class="form-control" placeholder="enter email id" name="email" value="">
+                            <span class="text-danger validation-error" id="email-error"></span>
+                        </div>
+                    </div>
+                    <div class="mt-4 text-right">
+                        <button class="btn btn-primary profile-button" type="submit">Save Profile</button>
+                    </div>
+                    <div id="validation-errors"></div>
+                </div>
+            </form>
+        </div>
     </div>
-</div>
-</div>
+    <script>
+        const form = document.querySelector('form');
+        const validationErrors = document.querySelector('#validation-errors');
+
+        form.addEventListener('submit', event => {
+            event.preventDefault(); // Prevent default form submission
+
+            // Reset all validation error messages
+            document.querySelectorAll('.validation-error').forEach(element => {
+                element.innerHTML = '';
+            });
+
+            const firstName = form.elements.firstName.value.trim();
+            const lastName = form.elements.lastName.value.trim();
+            const phoneNumber = form.elements.phoneNumber.value.trim();
+            const email = form.elements.email.value.trim();
+
+            if (!firstName) {
+                document.querySelector('#firstName-error').innerHTML = 'Please enter your first name.';
+            }
+
+            if (!lastName) {
+                document.querySelector('#lastName-error').innerHTML = 'Please enter your last name.';
+            }
+
+            if (!phoneNumber) {
+                document.querySelector('#phoneNumber-error').innerHTML = 'Please enter your phone number.';
+            }
+
+            if (!email) {
+                document.querySelector('#email-error').innerHTML = 'Please enter your email ID.';
+            }
+
+            // If there are validation errors, show them in the validation-errors div
+            const errorElements = document.querySelectorAll('.validation-error');
+            if (errorElements.length > 0) {
+                validationErrors.innerHTML = '<p class="text-danger">Please fix the errors below:</p>';
+                errorElements.forEach(element => {
+                        // if (element.innerHTML !== '') {
+                        //     validationErrors.innerHTML += `<p class="text-danger">${element.innerHTML}</p>`;
+                        // }
+                });
+            } else {
+                validationErrors.innerHTML = ''; // Clear any previous validation errors
+                form.submit(); // Submit the form
+            }
+        });
+    </script>
 </div>
 
-<%- include('./layout/footer'); %>

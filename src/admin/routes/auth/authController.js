@@ -68,8 +68,8 @@ class authController{
     }
 
     async profile(req, res) {  
-        console.log('=> profile route');  
         try{
+            console.log('=> profile route', req.body); 
 
         }catch(err){
 
