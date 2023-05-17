@@ -39,4 +39,35 @@ $(this).prop('Counter',0).animate({
     });
   });
 
+
+
+
+
+
+
+
+
+
+
+  /* datatable */
+  $.ajax({
+    url: '/your-api-endpoint',
+    method: 'GET',
+    dataType: 'json',
+    success: function(response) {
+      // Populate the datatable
+      $('#example').DataTable({
+        data: response,
+        columns: [
+          { data: 'name' },
+          { data: 'age' },
+          { data: 'city' }
+        ]
+      });
+    },
+    error: function(xhr, status, error) {
+      console.error(error);
+    }
+  });
+
 }); 
