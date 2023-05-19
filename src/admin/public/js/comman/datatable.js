@@ -1,48 +1,56 @@
-$(document).ready(() => {
+jQuery(document).ready(function() {
 
-    const $usersDatatable = $("#users-datatable");
+    //const usersDatatable = $("#users-datatable");
 
 
-
-    var usersdataTable =  $usersDatatable.DataTable({
+    var usersdataTable =  jQuery("#users-datatable").DataTable({
     
-    aoColumnDefs: [
-        {
+        aoColumnDefs: [
+            {
+                bSortable: false,
+                aTargets: [-1],
+            },
+        ],
+        aoColumnDefs: [{
             bSortable: false,
             aTargets: [-1],
+        }],
+        stateSave: true,
+        searchDelay: 700,
+        aaSorting: [
+            [0, 'desc'],
+        ],
+        processing: true,
+        serverSide: true,
+        ajax: {
+            url: '/users/list',
+            data: {},
         },
-    ],
-    aoColumnDefs: [{
-        bSortable: false,
-        aTargets: [-1],
-    }],
-    stateSave: true,
-    searchDelay: 700,
-    aaSorting: [
-        [0, 'desc'],
-    ],
-    processing: true,
-    serverSide: true,
-    ajax: {
-        url: '/users/list',
-        data: {},
-    },
-    initComplete: (settings, json) => {
-        console.log('json==>>',json, settings)
-        $('.tableLoader').css('display', 'none');
-    },
-    language: {
-        paginate: {
-            previous: '<i class="mdi mdi-chevron-left">',
-            next: '<i class="mdi mdi-chevron-right">',
+        initComplete: (settings, json) => {
+            console.log('json==>>',json, settings)
+            $('.tableLoader').css('display', 'none');
         },
-    },
-    drawCallback: () => {
-        $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
-    },
-});
+        language: {
+            paginate: {
+                previous: '<i class="mdi mdi-chevron-left">',
+                next: '<i class="mdi mdi-chevron-right">',
+            },
+        },
+        drawCallback: () => {
+            $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
+        },
+    });
+  });
+
+
+
+
+
+/* $(document).ready(() => {
+
+    console.log('=======>>',usersDatatable )
 
 usersdataTable.draw();
 
 
-});
+}); */

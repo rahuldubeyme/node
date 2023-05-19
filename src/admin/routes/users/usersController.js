@@ -10,6 +10,10 @@ class usersController{
 
 
     async list(req, res) {
+
+
+        console.log("user list===============>>>")
+
         let reqData = req.query;
         let columnNo = parseInt(reqData.order[0].column);
         let sortOrder = reqData.order[0].dir === 'desc' ? -1 : 1;
