@@ -69,6 +69,9 @@ class usersController{
                 },
             },
         ]);
+
+        console.log('userData==>>',userData)
+
         const count = userData.length ? userData[0].count : 0;
         response.draw = 0;
         if (reqData.draw) {
