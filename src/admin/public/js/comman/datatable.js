@@ -1,9 +1,32 @@
 $(document).ready(() => {
+    const usersDatatable = $("#users-datatable");
+    
+    var dataTable = usersDatatable.DataTable({
+        'processing' : true,
+        'serverSide' : true,
+        'serverMethod' : 'get',
+        'ajax' : {
+            'url' : '/users/list'
+        },
+        'aaSorting' : [],
 
-    //const usersDatatable = $("#users-datatable");
+        
+        'columns' : [
+            { data : 'fullName' },
+            { data : 'userName' },
+            { data : 'mobile' },
+            { data : 'isSuspended' },
+            { data : 'created' },
+            { data : 'actions' }
+        ]
+    });
 
 
-    var usersdataTable =  jQuery("#users-datatable").DataTable({
+
+
+
+
+    /* var usersdataTable =  jQuery("#users-datatable").DataTable({
     
         aoColumnDefs: [
             {
@@ -39,18 +62,15 @@ $(document).ready(() => {
         drawCallback: () => {
             $('.dataTables_paginate > .pagination').addClass('pagination-rounded');
         },
-    });
-  });
+    }); 
+   
+  }); */
 
 
 
 
 
-/* $(document).ready(() => {
-
-    console.log('=======>>',usersDatatable )
-
-usersdataTable.draw();
 
 
-}); */
+
+} );

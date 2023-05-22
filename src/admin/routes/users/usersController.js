@@ -15,17 +15,17 @@ class usersController{
         console.log("user list===============>>>")
 
         let reqData = req.query;
-        let columnNo = parseInt(reqData.order[0].column);
-        let sortOrder = reqData.order[0].dir === 'desc' ? -1 : 1;
+        //let columnNo = parseInt(reqData.order[0].column);
+        //let sortOrder = reqData.order[0].dir === 'desc' ? -1 : 1;
 
         let query = {
         };
         let filterCondition = {};
       
  
-        let sortCond = { created: sortOrder };
+        //let sortCond = { created: sortOrder };
         let response = {};
-        switch (columnNo) {
+       /*  switch (columnNo) {
             case 1:
                 sortCond = {
                     fullName: sortOrder,
@@ -39,7 +39,7 @@ class usersController{
             default:
                 sortCond = { created: sortOrder };
                 break;
-        }
+        } */
 
         let skip = parseInt(reqData.start);
         let limit = parseInt(reqData.length);
@@ -50,24 +50,24 @@ class usersController{
 
 
             { $match: filterCondition },
-            {
+           /*  {
                 $sort: sortCond,
-            },
-            {
+            }, */
+            /* {
                 $group: {
                     _id: null,
                     count: { $sum: 1 },
                     items: { $push: '$$ROOT' },
                 },
-            },
-            {
+            }, */
+           /*  {
                 $project: {
                     count: 1,
                     items: {
                         $slice: ['$items', skip, limit],
                     },
                 },
-            },
+            }, */
         ]);
 
         console.log('userData==>>',userData)
@@ -80,7 +80,7 @@ class usersController{
         response.recordsTotal = count;
         response.recordsFiltered = count;
 
-        let users = userData.length ? userData[0].items : [];
+        let users = userData ;
 
         if (users.length) {
             users = users.map(user => {
@@ -108,8 +108,8 @@ class usersController{
                     2: user.userName || 'N/A',
                     3: user.email || 'N/A',
                     4: user.mobile ? `${user.countryCode}${user.mobile}` : 'N/A',
-                    5: user.isSuspended ? `<span class="badge label-table badge-secondary">${req.__("IN_ACTIVE")}</span>` : `<span class="badge label-table badge-success">${req.__("ACTIVE")}</span>`,
-                    6: showDateAccordingTimezone(user.created),
+                    5: user.isSuspended ? `<span class="badge label-table badge-secondary">IN_ACTIVE</span>` : `<span class="badge label-table badge-success">ACTIVE</span>`,
+                    6: user.created,
                     7: actions ? actions : '<span class="badge label-table badge-secondary">N/A</span>',
                 };
             });

@@ -26,7 +26,7 @@ $(this).prop('Counter',0).animate({
 
 
   // Get the button element by its ID
-  const button = document.getElementById("myButton");
+  /* const button = document.getElementById("myButton");
 
   // Add a click event listener to the button
   button.addEventListener("click", function() {
@@ -37,7 +37,7 @@ $(this).prop('Counter',0).animate({
       icon: 'success',
       confirmButtonText: 'OK'
     });
-  });
+  }); */
 
 
 
@@ -50,7 +50,7 @@ $(this).prop('Counter',0).animate({
 
 
   /* datatable */
-  $.ajax({
+/*   $.ajax({
     url: '/your-api-endpoint',
     method: 'GET',
     dataType: 'json',
@@ -68,6 +68,6 @@ $(this).prop('Counter',0).animate({
     error: function(xhr, status, error) {
       console.error(error);
     }
-  });
+  }); */
 
 }); 
