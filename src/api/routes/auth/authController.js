@@ -24,57 +24,6 @@ const fiveMinutesLater = new Date(now.getTime() + (50 * 60 * 1000));
 
 class authController{
 
-	
-    async login(req, res) {          
-		try {
-
-			let params = req.body || {} && req.params || {} && req.query || {};
-			const body = Object.assign({}, params);
-
-			console.log("===============>>>>login", body);
-			Users.findOne({$or : [{email : body.email}, { mobile : body.email}], isDeleted : false, isMobileVarify : true}).then(user => {
-				if (user) {
-					//Compare given password with db's hash.
-					bcrypt.compare(body.password,user.password,function (err,same) {
-						if(same){
-							//Check account confirmation.
-							if(user){
-								// Check User's account active or not.
-								if(user.isMobileVarify) {
-									let userData = {
-										_id: user._id,
-										firstName: user.firstName,
-										lastName: user.lastName,
-										email: user.email,
-									};
-									//Prepare JWT token for authentication
-									const jwtPayload = userData;
-									const jwtData = {
-										expiresIn: process.env.JWT_TIMEOUT_DURATION,
-									};
-									const secret = process.env.JWT_SECRET;
-									//Generated JWT token with Payload and secret.
-									userData.token = jwt.sign(jwtPayload, secret, jwtData);
-									return success(res,"Login Success.", userData);
-								}else {
-									return unauthorized(res, "Account is not active. Please contact admin.");
-								}
-							}else{
-								return unauthorized(res, "Account is not confirmed. Please confirm your account.");
-							}
-						}else{
-							return unauthorized(res, "Email or Password wrong.");
-						}
-					});
-				}else{
-					return unauthorized(res, "Email or Password wrong.");
-				}
-			});
-		} catch (err) {
-			console.log("error==>", err)
-			return error(res, err);
-		}
-    }; 
 
     async register(req , res){
 		try {
@@ -96,14 +45,8 @@ class authController{
 				let user = Users()
 
 				
-	
-					user.userName = body.userName;
-					user.firstName = body.firstName;
-					user.lastName = body.lastName;
-					user.email = body.email;
 					user.countryCode = body.countryCode;
 					user.mobile = body.mobile;
-					user.password = body.password;
 		
 					await user.save();
 
@@ -224,77 +167,6 @@ class authController{
 					return  success(res,"Otp sent on your registred mobile", userJSON);
 
 			}
-		} catch (err) {
-			return  Error(res, err);
-		}  
-    }; 
-
-	async forgetPassword(req, res) {  
-        try {
-			let params = req.body || {} && req.params || {} && req.query || {};
-			const body = Object.assign({}, params);
-
-			let user = await Users.findOne({ 
-				$or : [
-					{
-						email : body.email,
-					},
-					{
-						mobile : body.email
-					}
-				],
-				isDeleted : false
-			 })
-
-			if(!user){
-				return  success(res,"User not exist", {});
-			}else{
-				
-
-				let otp = await generateOTP(4);
-				let tempMobile =new TempMobile();
-					tempMobile.mobileNumber = user.mobile,
-					tempMobile.verificationCode = otp,
-					tempMobile.validTillAt = fiveMinutesLater.valueOf()
-					await tempMobile.save();
-
-					const token = await signInTempToken(user)
-
-					let userJSON = {
-						mobile : user.mobile,
-						token : token,
-						otp : otp
-					}
-	
-					return  success(res,"Otp sent on your registred mobile", userJSON);
-
-			}
-		} catch (err) {
-			return  Error(res, err);
-		}  
-    }; 
-
-	async changePassword(req, res) {  
-        try {
-			let params = req.body || {} && req.params || {} && req.query || {};
-			const body = Object.assign({}, params);
-
-			let user = await Users.findOne({ _id : res.user._id, isDeleted : false })
-			
-			if (!user) {
-				return  success(res,"user not found", {});
-			}
-			const isMatch = await bcrypt.compare(body.currentPassword, user.password);
-			if (!isMatch) {
-				return  success(res,"Invalid password", {});
-			}else{
-				const hashedPassword = await bcrypt.hash(body.newPassword);
-				user.password = hashedPassword;
-				await user.save();
-
-				return  success(res,"Password changed successfully", {});
-			}
-
 		} catch (err) {
 			return  Error(res, err);
 		}  
