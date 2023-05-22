@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: Tifin-Service API
+  title: My API 2
   version: 1.0.0
 tags:
   - name: Authentication

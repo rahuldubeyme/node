@@ -56,17 +56,17 @@ const YAML = require('yamljs');
 // Load Swagger YAML file
 const indexCommon = YAML.load('./src/api/docs/swagger.yaml');
 // 1
-const lostPeople = YAML.load('./src/api/docs/lost-people.yaml');
+const lostPeople = YAML.load('./src/api/docs/lostpeople.yaml');
 // 2
 const secureChat = YAML.load('./src/api/docs/common.yaml');
 // 3
-const tifinCenter = YAML.load('./src/api/docs/tifin-center.yaml');
+const tifinCenter = YAML.load('./src/api/docs/tifincenter.yaml');
 
 // Mount Swagger UI middleware
-app.use('/docs/common', swaggerUi.serve, swaggerUi.setup(indexCommon));
-app.use('/docs/tifin-center', swaggerUi.serve, swaggerUi.setup(tifinCenter));
-app.use('/docs/lost-people', swaggerUi.serve, swaggerUi.setup(lostPeople));
-app.use('/docs/secure-chat', swaggerUi.serve, swaggerUi.setup(secureChat));
+app.use('/docs/common', swaggerUi.serve, swaggerUi.setup(YAML.load('./src/api/docs/swagger.yaml')));
+app.use('/docs/tifin-center', swaggerUi.serve, swaggerUi.setup(YAML.load('./src/api/docs/lostpeople.yaml')));
+app.use('/docs/lost-people', swaggerUi.serve, swaggerUi.setup(YAML.load('./src/api/docs/common.yaml')));
+app.use('/docs/secure-chat', swaggerUi.serve, swaggerUi.setup(YAML.load('./src/api/docs/tifincenter.yaml')));
 
 // routers
 app.use("/", apiRouter);

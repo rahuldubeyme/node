@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: My API
+  title: Tifin-Service API 2
   version: 1.0.0
 tags:
   - name: Authentication
@@ -17,39 +17,7 @@ components:
       type: http
       scheme: bearer
 paths:
-  /auth/log-in:
-    post:
-      tags:
-        - Authentication
-      summary: Logs a user into the system
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - email
-                - password
-              properties:
-                email:
-                  type: string
-                  example: "rahuldubey@yopmail.com"
-                password:
-                  type: string
-                  example: "Admin@123"
-      responses:
-        '200':
-          description: OK
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  token:
-                    type: string
-        '401':
-          description: Unauthorized
-  
+
   /auth/sign-up:
     post:
       tags:
@@ -61,27 +29,12 @@ paths:
             schema:
               type: object
               required:
-                - userName
-                - firstName
-                - lastName
-                - email
                 - countryCode
                 - mobile
-                - password
               properties:
-                userName:
-                  type: string
-                firstName:
-                  type: string
-                lastName:
-                  type: string
-                email:
-                  type: string
                 countryCode:
                   type: string
                 mobile:
-                  type: string
-                password:
                   type: string
       responses:
         '200':
@@ -89,27 +42,6 @@ paths:
         '401':
           description: Unauthorized
     
-  /auth/forget-password:
-    post:
-      tags:
-        - Authentication
-      summary: Sends a password reset email to the user's email address
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - email
-              properties:
-                email:
-                  type: string
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Unauthorized
-  
   /auth/resend-otp:
     post:
       tags:
@@ -158,38 +90,6 @@ paths:
         '401':
           description: Unauthorized
 
-  /auth/change-password:
-    post:
-      tags:
-        - Authentication
-      summary: Change Password Api
-      security:
-        - Token-Authentication: []
-      requestBody:
-        content:
-          application/x-www-form-urlencoded:
-            schema:
-              type: object
-              required:
-                - currentPassword
-                - newPassword
-                - confirmPassword
-              properties:
-                currentPassword:
-                  type: string
-                  example: "Admin@123"
-                newPassword:
-                  type: string
-                  example: "Admin@23"
-                confirmPassword:
-                  type: string
-                  example: "Admin@23"
-      responses:
-        '200':
-          description: OK
-        '401':
-          description: Unauthorized
-  
   /auth/log-out:
     get:
       tags:

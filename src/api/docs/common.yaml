@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  title: My API
+  title: My API 3
   version: 1.0.0
 tags:
   - name: Authentication
