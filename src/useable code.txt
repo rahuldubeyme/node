@@ -294,7 +294,87 @@ login erro
 
 
 
--------------------------------------------------------------------------------------------
+----------------------------------------------------google fb auth---------------------------------------
+
+app.get('/auth/google', (req, res) => {
+  const { clientID, redirectURI } = config.google;
+  const authURL = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${clientID}&redirect_uri=${redirectURI}&response_type=code&scope=profile%20email`;
+  res.redirect(authURL);
+});
+
+app.get('/auth/google/callback', async (req, res) => {
+  const { clientID, clientSecret, redirectURI } = config.google;
+  const { code } = req.query;
+
+  try {
+    const tokenResponse = await axios.post('https://oauth2.googleapis.com/token', {
+      code,
+      client_id: clientID,
+      client_secret: clientSecret,
+      redirect_uri: redirectURI,
+      grant_type: 'authorization_code'
+    });
+
+    const { access_token } = tokenResponse.data;
+
+    const profileResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${access_token}`);
+    const profile = profileResponse.data;
+
+    // Handle user data after successful authentication
+    // You can create or update user in your database here
+    console.log('Google Profile:', profile);
+
+    // Redirect or send token to the client
+    res.redirect('/profile');
+  } catch (error) {
+    console.error('Google Authentication Error:', error);
+    res.redirect('/login');
+  }
+});
+
+// Define routes for Facebook authentication
+app.get('/auth/facebook', (req, res) => {
+  const { clientID, redirectURI } = config.facebook;
+  const authURL = `https://www.facebook.com/v13.0/dialog/oauth?client_id=${clientID}&redirect_uri=${redirectURI}&scope=email`;
+  res.redirect(authURL);
+});
+
+app.get('/auth/facebook/callback', async (req, res) => {
+  const { clientID, clientSecret, redirectURI } = config.facebook;
+  const { code } = req.query;
+
+  try {
+    const tokenResponse = await axios.get(`https://graph.facebook.com/v13.0/oauth/access_token?client_id=${clientID}&redirect_uri=${redirectURI}&client_secret=${clientSecret}&code=${code}`);
+
+    const { access_token } = tokenResponse.data;
+
+    const profileResponse = await axios.get(`https://graph.facebook.com/me?fields=name,email&access_token=${access_token}`);
+    const profile = profileResponse.data;
+
+    // Handle user data after successful authentication
+    // You can create or update user in your database here
+    console.log('Facebook Profile:', profile);
+
+    // Redirect or send token to the client
+    res.redirect('/profile');
+  } catch (error) {
+    console.error('Facebook Authentication Error:', error);
+    res.redirect('/login');
+  }
+});
+
+// Protect a route with authentication
+app.get('/profile', ensureAuthenticated, (req, res) => {
+  res.send('Authenticated User');
+});
+
+// Middleware to check if user is authenticated
+function ensureAuthenticated(req, res, next) {
+  if (req.session.user) {
+    return next();
+  }
+  res.redirect('/login');
+}
 
 
 
