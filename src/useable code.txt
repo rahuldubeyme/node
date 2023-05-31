@@ -393,3 +393,26 @@ function ensureAuthenticated(req, res, next) {
 
 
 
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color:  #39A6A3;">
+
+
+	#pink
+		background: linear-gradient(to right, #ff5858, #f857a6)
+
+	#red
+		background: linear-gradient(to right, #d31027, #ea384d)
+
+	#purple
+		background: linear-gradient(to right, #41295a, #2f0743)
+
+	#blue
+		background: linear-gradient(to right, #396afc, #2948ff)
+
+	#green
+		background: linear-gradient(to right, #add100, #7b920a)
+
+	#yellow
+		background: linear-gradient(to right, #f7971e, #ffd200)
+
+	#orange
+		background: linear-gradient(to right, #e43a15, #e65245)
